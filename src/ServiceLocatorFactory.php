@@ -1,0 +1,71 @@
+<?php
+
+namespace ExtendsFramework\ServiceLocator;
+
+use ExtendsFramework\ServiceLocator\Exception\ResolverNotFound;
+use ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver;
+use ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver;
+use ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver;
+use ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver;
+use ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
+
+class ServiceLocatorFactory
+{
+    /**
+     * Create ServiceLocator for $resolvers.
+     *
+     * When looking for a resolver to create the requested service, the resolvers will be looped sequentially. So, it
+     * is recommended to begin with the most used resolver(s) in $resolvers.
+     *
+     * @param array $resolvers
+     * @return ServiceLocatorInterface
+     */
+    public function create(array $resolvers)
+    {
+        $serviceLocator = new ServiceLocator();
+        foreach ($resolvers as $name => $services) {
+            $resolver = $this->resolver($name, $services);
+            $serviceLocator->register($resolver, $name);
+        }
+        return $serviceLocator;
+    }
+
+    /**
+     * Get resolver with $name and register $services.
+     *
+     * An exception will be thrown when a resolver for $name can not be found.
+     *
+     * @param string $name
+     * @param array  $services
+     * @return ResolverInterface
+     * @throws ResolverNotFound
+     */
+    protected function resolver($name, array $services)
+    {
+        switch ($name) {
+            case 'aliases':
+                $resolver = new AliasResolver();
+                break;
+            case 'closures':
+                $resolver = new ClosureResolver();
+                break;
+            case 'factories':
+                $resolver = new FactoryResolver();
+                break;
+            case 'invokables':
+                $resolver = new InvokableResolver();
+                break;
+            case 'reflections':
+                $resolver = new ReflectionResolver();
+                break;
+            default:
+                throw ResolverNotFound::forName($name);
+        }
+
+        foreach ($services as $key => $value) {
+            $resolver->register($key, $value);
+        }
+        return $resolver;
+    }
+}

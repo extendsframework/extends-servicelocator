@@ -1,0 +1,97 @@
+<?php
+
+namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
+
+use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidConstructorParameter;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
+use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
+use ReflectionClass;
+use ReflectionMethod;
+
+class ReflectionResolver implements ResolverInterface
+{
+    /**
+     * An associative array which holds the classes.
+     *
+     * @var array
+     */
+    protected $classes;
+
+    /**
+     * @inheritDoc
+     */
+    public function has($key)
+    {
+        $exists = isset($this->classes[$key]);
+        return $exists;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get($key, ServiceLocatorInterface $serviceLocator)
+    {
+        if (!$this->has($key)) {
+            return null;
+        }
+
+        $class = $this->classes[$key];
+        $values = $this->values($class, $serviceLocator);
+        $service = new $class(...$values);
+        return $service;
+    }
+
+    /**
+     * Register $class for $key.
+     *
+     * @param string $key
+     * @param string $class
+     * @return $this
+     */
+    public function register($key, $class)
+    {
+        $this->classes[$key] = (string)$class;
+        return $this;
+    }
+
+    /**
+     * Unregister class for $key.
+     *
+     * @param string $key
+     * @return $this
+     */
+    public function unregister($key)
+    {
+        unset($this->classes[$key]);
+        return $this;
+    }
+
+    /**
+     * Get construct parameters for $class.
+     *
+     * Parameters will be obtained by reflection. A parameter must be a class which can be resolved by the service
+     * locator. When the parameter is not a class, or can not be resolved by the service locator, an exception will
+     * be thrown.
+     *
+     * @param string                  $class
+     * @param ServiceLocatorInterface $serviceLocator
+     * @return array
+     * @throws InvalidConstructorParameter
+     */
+    protected function values($class, ServiceLocatorInterface $serviceLocator)
+    {
+        $values = [];
+        $constructor = (new ReflectionClass($class))->getConstructor();
+        if ($constructor instanceof ReflectionMethod) {
+            foreach ($constructor->getParameters() as $parameter) {
+                $class = $parameter->getClass();
+                if (!$class instanceof ReflectionClass) {
+                    throw InvalidConstructorParameter::forName($parameter->getName());
+                }
+
+                $values[] = $serviceLocator->get($class->getName());
+            }
+        }
+        return $values;
+    }
+}
