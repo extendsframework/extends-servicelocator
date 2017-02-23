@@ -20,8 +20,7 @@ class InvokableResolver implements ResolverInterface
      */
     public function has($key)
     {
-        $exists = isset($this->invokables[$key]);
-        return $exists;
+        return isset($this->invokables[$key]);
     }
 
     /**
@@ -32,10 +31,10 @@ class InvokableResolver implements ResolverInterface
         if (!$this->has($key)) {
             return null;
         }
-
+        
         $invokable = $this->invokables[$key];
-        $service = new $invokable();
-        return $service;
+
+        return new $invokable();
     }
 
     /**
@@ -55,6 +54,7 @@ class InvokableResolver implements ResolverInterface
         }
 
         $this->invokables[$key] = (string)$invokable;
+
         return $this;
     }
 
@@ -67,6 +67,7 @@ class InvokableResolver implements ResolverInterface
     public function unregister($key)
     {
         unset($this->invokables[$key]);
+
         return $this;
     }
 }

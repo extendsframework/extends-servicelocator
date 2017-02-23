@@ -2,9 +2,9 @@
 
 namespace ExtendsFramework\ServiceLocator\Exception;
 
-use InvalidArgumentException;
+use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 
-class ResolverNotFound extends InvalidArgumentException
+class ResolverNotFound extends ServiceLocatorException
 {
     /**
      * Returns a new instance when no resolver can be found for $name.
@@ -14,7 +14,9 @@ class ResolverNotFound extends InvalidArgumentException
      */
     public static function forName($name)
     {
-        $exception = new static(sprintf('Resolver MUST be registered with the factory, got "%s".', $name));
-        return $exception;
+        return new static(sprintf(
+            'Resolver MUST be registered with the factory, got "%s".',
+            $name
+        ));
     }
 }

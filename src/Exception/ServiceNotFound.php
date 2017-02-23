@@ -2,9 +2,9 @@
 
 namespace ExtendsFramework\ServiceLocator\Exception;
 
-use InvalidArgumentException;
+use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 
-class ServiceNotFound extends InvalidArgumentException
+class ServiceNotFound extends ServiceLocatorException
 {
     /**
      * Returns a new instance when service with $key can not be found.
@@ -14,7 +14,9 @@ class ServiceNotFound extends InvalidArgumentException
      */
     public static function forService($key)
     {
-        $exception = new static(sprintf('Service with key "%s" MUST exist.', $key));
-        return $exception;
+        return new static(sprintf(
+            'Service with key "%s" MUST exist.',
+            $key
+        ));
     }
 }

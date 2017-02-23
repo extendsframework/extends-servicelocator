@@ -3,6 +3,7 @@
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
 use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\UnknownServiceFactoryType;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 
@@ -20,8 +21,7 @@ class FactoryResolver implements ResolverInterface
      */
     public function has($key)
     {
-        $exists = isset($this->factories[$key]);
-        return $exists;
+        return isset($this->factories[$key]);
     }
 
     /**
@@ -41,8 +41,7 @@ class FactoryResolver implements ResolverInterface
             $this->factories[$key] = $factory;
         }
 
-        $service = $factory->create($key, $serviceLocator);
-        return $service;
+        return $factory->create($key, $serviceLocator);
     }
 
     /**
@@ -54,7 +53,7 @@ class FactoryResolver implements ResolverInterface
      * @param string                         $key
      * @param ServiceFactoryInterface|string $factory
      * @return $this
-     * @throws
+     * @throws ResolverException
      */
     public function register($key, $factory)
     {
@@ -66,6 +65,7 @@ class FactoryResolver implements ResolverInterface
         }
 
         $this->factories[$key] = $factory;
+
         return $this;
     }
 
@@ -78,6 +78,7 @@ class FactoryResolver implements ResolverInterface
     public function unregister($key)
     {
         unset($this->factories[$key]);
+
         return $this;
     }
 }

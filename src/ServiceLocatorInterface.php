@@ -2,8 +2,7 @@
 
 namespace ExtendsFramework\ServiceLocator;
 
-use ExtendsFramework\ServiceLocator\Exception\InvalidServiceType;
-use ExtendsFramework\ServiceLocator\Exception\ServiceNotFound;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 
 interface ServiceLocatorInterface
 {
@@ -13,8 +12,8 @@ interface ServiceLocatorInterface
      * An exception will be thrown when $key is invalid.
      *
      * @param string $key
-     * @throws ServiceNotFound
      * @return bool
+     * @throws ServiceLocatorException
      */
     public function has($key);
 
@@ -25,9 +24,9 @@ interface ServiceLocatorInterface
      * a object.
      *
      * @param string $key
-     * @return object
-     * @throws ServiceNotFound
-     * @throws InvalidServiceType
+     * @return mixed
+     * @throws ServiceLocatorException
+     * @throws ResolverException
      */
     public function get($key);
 }

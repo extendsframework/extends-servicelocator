@@ -2,9 +2,9 @@
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception;
 
-use InvalidArgumentException;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 
-class InvalidConstructorParameter extends InvalidArgumentException
+class InvalidConstructorParameter extends ResolverException
 {
     /**
      * Returns an new instance when the reflection parameter $name is not an object.
@@ -14,8 +14,9 @@ class InvalidConstructorParameter extends InvalidArgumentException
      */
     public static function forName($name)
     {
-        $exception = new static(sprintf('Parameter "%s" MUST be a class.', $name));
-        return $exception;
+        return new static(sprintf(
+            'Parameter "%s" MUST be a class.',
+            $name
+        ));
     }
-
 }

@@ -3,7 +3,9 @@
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
 use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidConstructorParameter;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
+use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -22,8 +24,7 @@ class ReflectionResolver implements ResolverInterface
      */
     public function has($key)
     {
-        $exists = isset($this->classes[$key]);
-        return $exists;
+        return isset($this->classes[$key]);
     }
 
     /**
@@ -37,8 +38,8 @@ class ReflectionResolver implements ResolverInterface
 
         $class = $this->classes[$key];
         $values = $this->values($class, $serviceLocator);
-        $service = new $class(...$values);
-        return $service;
+
+        return new $class(...$values);
     }
 
     /**
@@ -51,6 +52,7 @@ class ReflectionResolver implements ResolverInterface
     public function register($key, $class)
     {
         $this->classes[$key] = (string)$class;
+
         return $this;
     }
 
@@ -63,6 +65,7 @@ class ReflectionResolver implements ResolverInterface
     public function unregister($key)
     {
         unset($this->classes[$key]);
+
         return $this;
     }
 
@@ -76,7 +79,8 @@ class ReflectionResolver implements ResolverInterface
      * @param string                  $class
      * @param ServiceLocatorInterface $serviceLocator
      * @return array
-     * @throws InvalidConstructorParameter
+     * @throws ResolverException
+     * @throws ServiceLocatorException
      */
     protected function values($class, ServiceLocatorInterface $serviceLocator)
     {
@@ -84,14 +88,15 @@ class ReflectionResolver implements ResolverInterface
         $constructor = (new ReflectionClass($class))->getConstructor();
         if ($constructor instanceof ReflectionMethod) {
             foreach ($constructor->getParameters() as $parameter) {
-                $class = $parameter->getClass();
-                if (!$class instanceof ReflectionClass) {
+                $reflection = $parameter->getClass();
+                if (!$reflection instanceof ReflectionClass) {
                     throw InvalidConstructorParameter::forName($parameter->getName());
                 }
 
-                $values[] = $serviceLocator->get($class->getName());
+                $values[] = $serviceLocator->get($reflection->getName());
             }
         }
+
         return $values;
     }
 }

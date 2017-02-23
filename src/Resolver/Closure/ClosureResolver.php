@@ -20,8 +20,7 @@ class ClosureResolver implements ResolverInterface
      */
     public function has($key)
     {
-        $exists = isset($this->closures[$key]);
-        return $exists;
+        return isset($this->closures[$key]);
     }
 
     /**
@@ -35,9 +34,7 @@ class ClosureResolver implements ResolverInterface
             return null;
         }
 
-        $closure = $this->closures[$key];
-        $service = $closure($key, $serviceLocator);
-        return $service;
+        return $this->closures[$key]($key, $serviceLocator);
     }
 
     /**
@@ -50,6 +47,7 @@ class ClosureResolver implements ResolverInterface
     public function register($key, Closure $closure)
     {
         $this->closures[$key] = $closure;
+
         return $this;
     }
 
@@ -62,6 +60,7 @@ class ClosureResolver implements ResolverInterface
     public function unregister($key)
     {
         unset($this->closures[$key]);
+
         return $this;
     }
 }

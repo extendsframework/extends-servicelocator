@@ -19,8 +19,7 @@ class AliasResolver implements ResolverInterface
      */
     public function has($key)
     {
-        $exists = isset($this->aliases[$key]);
-        return $exists;
+        return isset($this->aliases[$key]);
     }
 
     /**
@@ -35,9 +34,7 @@ class AliasResolver implements ResolverInterface
             return null;
         }
 
-        $name = $this->aliases[$key];
-        $service = $serviceLocator->get($name);
-        return $service;
+        return $serviceLocator->get($this->aliases[$key]);
     }
 
     /**
@@ -50,6 +47,7 @@ class AliasResolver implements ResolverInterface
     public function register($key, $alias)
     {
         $this->aliases[$key] = (string)$alias;
+
         return $this;
     }
 
@@ -62,6 +60,7 @@ class AliasResolver implements ResolverInterface
     public function unregister($key)
     {
         unset($this->aliases[$key]);
+
         return $this;
     }
 }

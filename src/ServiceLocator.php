@@ -2,7 +2,6 @@
 
 namespace ExtendsFramework\ServiceLocator;
 
-use ExtendsFramework\ServiceLocator\Exception\InvalidServiceType;
 use ExtendsFramework\ServiceLocator\Exception\ServiceNotFound;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 
@@ -25,19 +24,6 @@ class ServiceLocator implements ServiceLocatorInterface
     /**
      * @inheritDoc
      */
-    public function has($key)
-    {
-        if (isset($this->services[$key])) {
-            return true;
-        }
-
-        $resolver = $this->resolver($key);
-        return boolval($resolver);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function get($key)
     {
         if (!$this->has($key)) {
@@ -48,13 +34,24 @@ class ServiceLocator implements ServiceLocatorInterface
         if (!$service) {
             $resolver = $this->resolver($key);
             $service = $resolver->get($key, $this);
-            if (!is_object($service)) {
-                throw InvalidServiceType::forNonObject($key, $service);
-            }
-
             $this->services[$key] = $service;
         }
+
         return $service;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function has($key)
+    {
+        if (isset($this->services[$key])) {
+            return true;
+        }
+        
+        $resolver = $this->resolver($key);
+
+        return (bool)$resolver;
     }
 
     /**
@@ -69,6 +66,7 @@ class ServiceLocator implements ServiceLocatorInterface
     public function register(ResolverInterface $resolver, $key)
     {
         $this->resolvers[$key] = $resolver;
+
         return $this;
     }
 
@@ -81,23 +79,8 @@ class ServiceLocator implements ServiceLocatorInterface
     public function unregister($key)
     {
         unset($this->resolvers[$key]);
-        return $this;
-    }
 
-    /**
-     * Get cached service for $key.
-     *
-     * If no service is cached, null will be returned.
-     *
-     * @param string $key
-     * @return object|null
-     */
-    protected function service($key)
-    {
-        if (isset($this->services[$key])) {
-            return $this->services[$key];
-        }
-        return null;
+        return $this;
     }
 
     /**
@@ -115,6 +98,24 @@ class ServiceLocator implements ServiceLocatorInterface
                 return $resolver;
             }
         }
+
+        return null;
+    }
+
+    /**
+     * Get cached service for $key.
+     *
+     * If no service is cached, null will be returned.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected function service($key)
+    {
+        if (isset($this->services[$key])) {
+            return $this->services[$key];
+        }
+
         return null;
     }
 }

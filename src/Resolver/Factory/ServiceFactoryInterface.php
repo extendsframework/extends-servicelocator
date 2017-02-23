@@ -11,7 +11,7 @@ interface ServiceFactoryInterface
      *
      * @param string                  $key
      * @param ServiceLocatorInterface $serviceLocator
-     * @return object
+     * @return mixed
      */
     public function create($key, ServiceLocatorInterface $serviceLocator);
 }

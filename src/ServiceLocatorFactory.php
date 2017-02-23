@@ -20,6 +20,7 @@ class ServiceLocatorFactory
      *
      * @param array $resolvers
      * @return ServiceLocatorInterface
+     * @throws ServiceLocatorException
      */
     public function create(array $resolvers)
     {
@@ -28,6 +29,7 @@ class ServiceLocatorFactory
             $resolver = $this->resolver($name, $services);
             $serviceLocator->register($resolver, $name);
         }
+
         return $serviceLocator;
     }
 
@@ -39,7 +41,7 @@ class ServiceLocatorFactory
      * @param string $name
      * @param array  $services
      * @return ResolverInterface
-     * @throws ResolverNotFound
+     * @throws ServiceLocatorException
      */
     protected function resolver($name, array $services)
     {
@@ -66,6 +68,7 @@ class ServiceLocatorFactory
         foreach ($services as $key => $value) {
             $resolver->register($key, $value);
         }
+
         return $resolver;
     }
 }

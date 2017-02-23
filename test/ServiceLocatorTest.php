@@ -104,38 +104,4 @@ class ServiceLocatorTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(stdClass::class, $service);
     }
-
-    /**
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::get()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::has()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::service()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::resolver()
-     * @covers                   \ExtendsFramework\ServiceLocator\Exception\InvalidServiceType::forNonObject()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Exception\InvalidServiceType
-     * @expectedExceptionMessage Service for key "A" MUST be an object, got "array".
-     */
-    public function testCanNotHandleInvalidResolverReturnType()
-    {
-        $resolver = $this->createMock(ResolverInterface::class);
-        $resolver
-            ->expects($this->once())
-            ->method('get')
-            ->with('A')
-            ->willReturn([]);
-
-        $resolver
-            ->expects($this->exactly(2))
-            ->method('has')
-            ->with('A')
-            ->willReturn(true);
-
-        /**
-         * @var ResolverInterface $resolver
-         */
-        $serviceLocator = new ServiceLocator();
-        $serviceLocator
-            ->register($resolver, 'invokables')
-            ->get('A');
-    }
 }

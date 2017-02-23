@@ -24,6 +24,7 @@ class ClosureResolverTest extends PHPUnit_Framework_TestCase
         $service = $resolver
             ->register('foo', function () {
                 $service = new stdClass();
+
                 return $service;
             })
             ->get('foo', $serviceLocator);
@@ -48,6 +49,7 @@ class ClosureResolverTest extends PHPUnit_Framework_TestCase
         $service = $resolver
             ->register('foo', function () {
                 $service = new stdClass();
+
                 return $service;
             })
             ->unregister('foo')

@@ -2,9 +2,9 @@
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception;
 
-use InvalidArgumentException;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 
-class UnknownInvokableType extends InvalidArgumentException
+class UnknownInvokableType extends ResolverException
 {
     /**
      * Returns an new instance when $invokable is not a existing class.
@@ -14,7 +14,9 @@ class UnknownInvokableType extends InvalidArgumentException
      */
     public static function forNonExistingClass($invokable)
     {
-        $exception = new static(sprintf('Invokable MUST be a valid class, got "%s".', $invokable));
-        return $exception;
+        return new static(sprintf(
+            'Invokable MUST be a valid class, got "%s".',
+            $invokable
+        ));
     }
 }
