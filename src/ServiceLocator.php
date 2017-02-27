@@ -60,9 +60,9 @@ class ServiceLocator implements ServiceLocatorInterface
      *
      * @param ResolverInterface $resolver
      * @param string            $key
-     * @return self
+     * @return ServiceLocator
      */
-    public function register(ResolverInterface $resolver, string $key): self
+    public function register(ResolverInterface $resolver, string $key): ServiceLocator
     {
         $this->resolvers[$key] = $resolver;
 
