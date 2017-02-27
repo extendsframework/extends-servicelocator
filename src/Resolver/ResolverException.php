@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver;
 
-use Exception;
+use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 
-class ResolverException extends Exception
+class ResolverException extends ServiceLocatorException
 {
 }

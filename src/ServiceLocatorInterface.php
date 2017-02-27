@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
-
 interface ServiceLocatorInterface
 {
     /**
@@ -27,7 +25,6 @@ interface ServiceLocatorInterface
      * @param string $key
      * @return mixed
      * @throws ServiceLocatorException
-     * @throws ResolverException
      */
     public function get(string $key);
 }
