@@ -1,21 +1,22 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator;
 
 use ExtendsFramework\ServiceLocator\Resolver\Factory\ServiceFactoryInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ServiceLocatorFactoryTest extends PHPUnit_Framework_TestCase
+class ServiceLocatorFactoryTest extends TestCase
 {
     /**
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::create()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::resolver()
      */
-    public function testCanCreateServiceLocatorForResolvers()
+    public function testCanCreateServiceLocatorForResolvers(): void
     {
         $factory = new ServiceLocatorFactory();
-        $factory->create([
+        $serviceLocator = $factory->create([
             'aliases' => [
                 'A' => 'A',
             ],
@@ -33,6 +34,8 @@ class ServiceLocatorFactoryTest extends PHPUnit_Framework_TestCase
                 'A' => stdClass::class,
             ],
         ]);
+
+        $this->assertInstanceOf(ServiceLocatorInterface::class, $serviceLocator);
     }
 
     /**
@@ -42,7 +45,7 @@ class ServiceLocatorFactoryTest extends PHPUnit_Framework_TestCase
      * @expectedException        \ExtendsFramework\ServiceLocator\Exception\ResolverNotFound
      * @expectedExceptionMessage Resolver MUST be registered with the factory, got "A".
      */
-    public function testCanNotCreateWithUnknownResolver()
+    public function testCanNotCreateWithUnknownResolver(): void
     {
         $factory = new ServiceLocatorFactory();
         $factory->create([

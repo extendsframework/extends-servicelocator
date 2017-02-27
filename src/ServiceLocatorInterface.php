@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator;
 
@@ -15,7 +16,7 @@ interface ServiceLocatorInterface
      * @return bool
      * @throws ServiceLocatorException
      */
-    public function has($key);
+    public function has(string $key): bool;
 
     /**
      * Get a service with the name $key.
@@ -28,5 +29,5 @@ interface ServiceLocatorInterface
      * @throws ServiceLocatorException
      * @throws ResolverException
      */
-    public function get($key);
+    public function get(string $key);
 }

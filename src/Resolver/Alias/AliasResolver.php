@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Alias;
 
@@ -17,7 +18,7 @@ class AliasResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return isset($this->aliases[$key]);
     }
@@ -28,7 +29,7 @@ class AliasResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function get($key, ServiceLocatorInterface $serviceLocator)
+    public function get(string $key, ServiceLocatorInterface $serviceLocator)
     {
         if (!$this->has($key)) {
             return null;
@@ -42,9 +43,9 @@ class AliasResolver implements ResolverInterface
      *
      * @param string $key
      * @param string $alias
-     * @return $this
+     * @return AliasResolver
      */
-    public function register($key, $alias)
+    public function register(string $key, string $alias): AliasResolver
     {
         $this->aliases[$key] = (string)$alias;
 
@@ -55,9 +56,9 @@ class AliasResolver implements ResolverInterface
      * Unregister alias for $key.
      *
      * @param string $key
-     * @return $this
+     * @return AliasResolver
      */
-    public function unregister($key)
+    public function unregister(string $key): AliasResolver
     {
         unset($this->aliases[$key]);
 

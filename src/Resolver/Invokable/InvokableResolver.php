@@ -1,8 +1,10 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
 use ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\UnknownInvokableType;
+use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 
@@ -18,7 +20,7 @@ class InvokableResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return isset($this->invokables[$key]);
     }
@@ -26,12 +28,12 @@ class InvokableResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function get($key, ServiceLocatorInterface $serviceLocator)
+    public function get(string $key, ServiceLocatorInterface $serviceLocator)
     {
         if (!$this->has($key)) {
             return null;
         }
-        
+
         $invokable = $this->invokables[$key];
 
         return new $invokable();
@@ -44,12 +46,12 @@ class InvokableResolver implements ResolverInterface
      *
      * @param string $key
      * @param string $invokable
-     * @return $this
-     * @throws UnknownInvokableType
+     * @return InvokableResolver
+     * @throws ResolverException
      */
-    public function register($key, $invokable)
+    public function register($key, $invokable): InvokableResolver
     {
-        if (!class_exists($invokable)) {
+        if (!\class_exists($invokable)) {
             throw UnknownInvokableType::forNonExistingClass($invokable);
         }
 
@@ -62,9 +64,9 @@ class InvokableResolver implements ResolverInterface
      * Unregister invokable for $key.
      *
      * @param string $key
-     * @return $this
+     * @return InvokableResolver
      */
-    public function unregister($key)
+    public function unregister(string $key): InvokableResolver
     {
         unset($this->invokables[$key]);
 

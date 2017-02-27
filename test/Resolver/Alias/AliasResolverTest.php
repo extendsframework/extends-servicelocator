@@ -1,19 +1,20 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Alias;
 
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class AliasResolverTest extends PHPUnit_Framework_TestCase
+class AliasResolverTest extends TestCase
 {
     /**
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::register()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::get()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::has()
      */
-    public function testCanRegisterAliasAndGetServiceForKey()
+    public function testCanRegisterAliasAndGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator
@@ -39,7 +40,7 @@ class AliasResolverTest extends PHPUnit_Framework_TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::get()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::has()
      */
-    public function testCanUnregisterAliasAndNotGetServiceForKey()
+    public function testCanUnregisterAliasAndNotGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Exception;
 
@@ -10,11 +11,11 @@ class ServiceNotFound extends ServiceLocatorException
      * Returns a new instance when service with $key can not be found.
      *
      * @param string $key
-     * @return static
+     * @return ServiceLocatorException
      */
-    public static function forService($key)
+    public static function forService(string $key): ServiceLocatorException
     {
-        return new static(sprintf(
+        return new static(\sprintf(
             'Service with key "%s" MUST exist.',
             $key
         ));

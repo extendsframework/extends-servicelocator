@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator;
 
@@ -22,7 +23,7 @@ class ServiceLocatorFactory
      * @return ServiceLocatorInterface
      * @throws ServiceLocatorException
      */
-    public function create(array $resolvers)
+    public function create(array $resolvers): ServiceLocatorInterface
     {
         $serviceLocator = new ServiceLocator();
         foreach ($resolvers as $name => $services) {
@@ -43,7 +44,7 @@ class ServiceLocatorFactory
      * @return ResolverInterface
      * @throws ServiceLocatorException
      */
-    protected function resolver($name, array $services)
+    protected function resolver(string $name, array $services): ResolverInterface
     {
         switch ($name) {
             case 'aliases':

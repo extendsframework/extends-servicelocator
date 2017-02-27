@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Closure;
 
@@ -18,7 +19,7 @@ class ClosureResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return isset($this->closures[$key]);
     }
@@ -28,7 +29,7 @@ class ClosureResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function get($key, ServiceLocatorInterface $serviceLocator)
+    public function get(string $key, ServiceLocatorInterface $serviceLocator)
     {
         if (!$this->has($key)) {
             return null;
@@ -42,9 +43,9 @@ class ClosureResolver implements ResolverInterface
      *
      * @param string  $key
      * @param Closure $closure
-     * @return $this
+     * @return ClosureResolver
      */
-    public function register($key, Closure $closure)
+    public function register(string $key, Closure $closure): ClosureResolver
     {
         $this->closures[$key] = $closure;
 
@@ -55,9 +56,9 @@ class ClosureResolver implements ResolverInterface
      * Unregister closure for $key.
      *
      * @param string $key
-     * @return $this
+     * @return ClosureResolver
      */
-    public function unregister($key)
+    public function unregister(string $key): ClosureResolver
     {
         unset($this->closures[$key]);
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
@@ -13,5 +14,5 @@ interface ServiceFactoryInterface
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
-    public function create($key, ServiceLocatorInterface $serviceLocator);
+    public function create(string $key, ServiceLocatorInterface $serviceLocator);
 }

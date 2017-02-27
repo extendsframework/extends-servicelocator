@@ -1,12 +1,13 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator;
 
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ServiceLocatorTest extends PHPUnit_Framework_TestCase
+class ServiceLocatorTest extends TestCase
 {
     /**
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::register()
@@ -15,7 +16,7 @@ class ServiceLocatorTest extends PHPUnit_Framework_TestCase
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::service()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::resolver()
      */
-    public function testCanRegisterResolverAndGetServiceForKey()
+    public function testCanRegisterResolverAndGetServiceForKey(): void
     {
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver
@@ -48,7 +49,7 @@ class ServiceLocatorTest extends PHPUnit_Framework_TestCase
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::service()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::resolver()
      */
-    public function testCanDirectlyReturnCachedServiceForKey()
+    public function testCanDirectlyReturnCachedServiceForKey(): void
     {
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver
@@ -89,7 +90,7 @@ class ServiceLocatorTest extends PHPUnit_Framework_TestCase
      * @expectedException        \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound
      * @expectedExceptionMessage Service with key "A" MUST exist.
      */
-    public function testCanUnRegisterResolverAndCanNotGetServiceForKey()
+    public function testCanUnRegisterResolverAndCanNotGetServiceForKey(): void
     {
         $resolver = $this->createMock(ResolverInterface::class);
 

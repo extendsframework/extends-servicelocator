@@ -1,11 +1,12 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class ReflectionResolverTest extends PHPUnit_Framework_TestCase
+class ReflectionResolverTest extends TestCase
 {
     /**
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::register()
@@ -13,24 +14,24 @@ class ReflectionResolverTest extends PHPUnit_Framework_TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::has()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::values()
      */
-    public function testCanRegisterReflectionClassAndGetServiceForKey()
+    public function testCanRegisterReflectionClassAndGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator
             ->expects($this->once())
             ->method('get')
-            ->with(B::class)
-            ->willReturn(new B());
+            ->with(ClassB::class)
+            ->willReturn(new ClassB());
 
         /**
          * @var ServiceLocatorInterface $serviceLocator
          */
         $resolver = new ReflectionResolver();
         $service = $resolver
-            ->register(A::class, A::class)
-            ->get(A::class, $serviceLocator);
+            ->register(ClassA::class, ClassA::class)
+            ->get(ClassA::class, $serviceLocator);
 
-        $this->assertInstanceOf(A::class, $service);
+        $this->assertInstanceOf(ClassA::class, $service);
     }
 
     /**
@@ -39,7 +40,7 @@ class ReflectionResolverTest extends PHPUnit_Framework_TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::get()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::has()
      */
-    public function testCanUnregisterReflectionClassAndNotGetServiceForKey()
+    public function testCanUnregisterReflectionClassAndNotGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -48,9 +49,9 @@ class ReflectionResolverTest extends PHPUnit_Framework_TestCase
          */
         $resolver = new ReflectionResolver();
         $service = $resolver
-            ->register(A::class, A::class)
-            ->unregister(A::class)
-            ->get(A::class, $serviceLocator);
+            ->register(ClassA::class, ClassA::class)
+            ->unregister(ClassA::class)
+            ->get(ClassA::class, $serviceLocator);
 
         $this->assertNull($service);
     }
@@ -64,7 +65,7 @@ class ReflectionResolverTest extends PHPUnit_Framework_TestCase
      * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidConstructorParameter
      * @expectedExceptionMessage Parameter "name" MUST be a class.
      */
-    public function testCanNotCreateClassWithNonObjectParameter()
+    public function testCanNotCreateClassWithNonObjectParameter(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -73,23 +74,23 @@ class ReflectionResolverTest extends PHPUnit_Framework_TestCase
          */
         $resolver = new ReflectionResolver();
         $resolver
-            ->register(C::class, C::class)
-            ->get(C::class, $serviceLocator);
+            ->register(ClassC::class, ClassC::class)
+            ->get(ClassC::class, $serviceLocator);
     }
 }
 
-class A
+class ClassA
 {
-    public function __construct(B $b)
+    public function __construct(ClassB $b)
     {
     }
 }
 
-class B
+class ClassB
 {
 }
 
-class C
+class ClassC
 {
     public function __construct($name)
     {

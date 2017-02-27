@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator;
 
@@ -24,7 +25,19 @@ class ServiceLocator implements ServiceLocatorInterface
     /**
      * @inheritDoc
      */
-    public function get($key)
+    public function has(string $key): bool
+    {
+        if (isset($this->services[$key])) {
+            return true;
+        }
+
+        return $this->resolver($key) instanceof ResolverInterface;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function get(string $key)
     {
         if (!$this->has($key)) {
             throw ServiceNotFound::forService($key);
@@ -41,29 +54,15 @@ class ServiceLocator implements ServiceLocatorInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function has($key)
-    {
-        if (isset($this->services[$key])) {
-            return true;
-        }
-        
-        $resolver = $this->resolver($key);
-
-        return (bool)$resolver;
-    }
-
-    /**
      * Register a new $resolver for $key.
      *
      * When a resolver is already registered for $key, it will be overwritten.
      *
      * @param ResolverInterface $resolver
      * @param string            $key
-     * @return $this
+     * @return self
      */
-    public function register(ResolverInterface $resolver, $key)
+    public function register(ResolverInterface $resolver, string $key): self
     {
         $this->resolvers[$key] = $resolver;
 
@@ -74,9 +73,9 @@ class ServiceLocator implements ServiceLocatorInterface
      * Unregister the resolver for $key.
      *
      * @param string $key
-     * @return $this
+     * @return ServiceLocator
      */
-    public function unregister($key)
+    public function unregister(string $key): ServiceLocator
     {
         unset($this->resolvers[$key]);
 
@@ -89,9 +88,9 @@ class ServiceLocator implements ServiceLocatorInterface
      * All resolvers will be checked if it can resolve service for $key. First resolver which can will be returned.
      *
      * @param string $key
-     * @return ResolverInterface|null
+     * @return ResolverInterface
      */
-    protected function resolver($key)
+    protected function resolver(string $key): ?ResolverInterface
     {
         foreach ($this->resolvers as $resolver) {
             if ($resolver->has($key)) {
@@ -110,7 +109,7 @@ class ServiceLocator implements ServiceLocatorInterface
      * @param string $key
      * @return mixed
      */
-    protected function service($key)
+    protected function service(string $key)
     {
         if (isset($this->services[$key])) {
             return $this->services[$key];

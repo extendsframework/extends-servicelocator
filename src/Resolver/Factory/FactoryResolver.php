@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
@@ -19,7 +20,7 @@ class FactoryResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return isset($this->factories[$key]);
     }
@@ -29,14 +30,14 @@ class FactoryResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function get($key, ServiceLocatorInterface $serviceLocator)
+    public function get(string $key, ServiceLocatorInterface $serviceLocator)
     {
         if (!$this->has($key)) {
             return null;
         }
 
         $factory = $this->factories[$key];
-        if (is_string($factory)) {
+        if (\is_string($factory)) {
             $factory = new $factory();
             $this->factories[$key] = $factory;
         }
@@ -52,15 +53,15 @@ class FactoryResolver implements ResolverInterface
      *
      * @param string                         $key
      * @param ServiceFactoryInterface|string $factory
-     * @return $this
+     * @return FactoryResolver
      * @throws ResolverException
      */
-    public function register($key, $factory)
+    public function register(string $key, $factory): FactoryResolver
     {
-        if (is_string($factory) && !is_subclass_of($factory, ServiceFactoryInterface::class, true)) {
+        if (\is_string($factory) && !\is_subclass_of($factory, ServiceFactoryInterface::class, true)) {
             throw UnknownServiceFactoryType::forString($factory);
         }
-        if (!is_string($factory) && !$factory instanceof ServiceFactoryInterface) {
+        if (!\is_string($factory) && !$factory instanceof ServiceFactoryInterface) {
             throw UnknownServiceFactoryType::forObject($factory);
         }
 
@@ -73,9 +74,9 @@ class FactoryResolver implements ResolverInterface
      * Unregister factory for $key.
      *
      * @param string $key
-     * @return $this
+     * @return FactoryResolver
      */
-    public function unregister($key)
+    public function unregister(string $key): FactoryResolver
     {
         unset($this->factories[$key]);
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
@@ -22,7 +23,7 @@ class ReflectionResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has($key)
+    public function has(string $key): bool
     {
         return isset($this->classes[$key]);
     }
@@ -30,7 +31,7 @@ class ReflectionResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function get($key, ServiceLocatorInterface $serviceLocator)
+    public function get(string $key, ServiceLocatorInterface $serviceLocator)
     {
         if (!$this->has($key)) {
             return null;
@@ -47,11 +48,11 @@ class ReflectionResolver implements ResolverInterface
      *
      * @param string $key
      * @param string $class
-     * @return $this
+     * @return ReflectionResolver
      */
-    public function register($key, $class)
+    public function register(string $key, string $class): ReflectionResolver
     {
-        $this->classes[$key] = (string)$class;
+        $this->classes[$key] = $class;
 
         return $this;
     }
@@ -60,9 +61,9 @@ class ReflectionResolver implements ResolverInterface
      * Unregister class for $key.
      *
      * @param string $key
-     * @return $this
+     * @return ReflectionResolver
      */
-    public function unregister($key)
+    public function unregister(string $key): ReflectionResolver
     {
         unset($this->classes[$key]);
 
@@ -82,7 +83,7 @@ class ReflectionResolver implements ResolverInterface
      * @throws ResolverException
      * @throws ServiceLocatorException
      */
-    protected function values($class, ServiceLocatorInterface $serviceLocator)
+    protected function values(string $class, ServiceLocatorInterface $serviceLocator): array
     {
         $values = [];
         $constructor = (new ReflectionClass($class))->getConstructor();

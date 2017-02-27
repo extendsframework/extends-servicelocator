@@ -1,19 +1,20 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Closure;
 
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class ClosureResolverTest extends PHPUnit_Framework_TestCase
+class ClosureResolverTest extends TestCase
 {
     /**
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::register()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::get()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::has()
      */
-    public function testCanRegisterClosureAndGetServiceForKey()
+    public function testCanRegisterClosureAndGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -38,7 +39,7 @@ class ClosureResolverTest extends PHPUnit_Framework_TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::get()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::has()
      */
-    public function testCanUnregisterClosureAndNotGetServiceForKey()
+    public function testCanUnregisterClosureAndNotGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 

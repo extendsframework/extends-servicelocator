@@ -1,19 +1,20 @@
 <?php
+declare(strict_types = 1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 
-class InvokableResolverTest extends PHPUnit_Framework_TestCase
+class InvokableResolverTest extends TestCase
 {
     /**
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::register()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::get()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::has()
      */
-    public function testCanRegisterInvokableAndGetServiceForKey()
+    public function testCanRegisterInvokableAndGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -34,7 +35,7 @@ class InvokableResolverTest extends PHPUnit_Framework_TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::get()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::has()
      */
-    public function testCanUnregisterInvokableAndNotGetServiceForKey()
+    public function testCanUnregisterInvokableAndNotGetServiceForKey(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -56,7 +57,7 @@ class InvokableResolverTest extends PHPUnit_Framework_TestCase
      * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\UnknownInvokableType
      * @expectedExceptionMessage Invokable MUST be a valid class, got "bar".
      */
-    public function testCanNotRegisterUnknownFactoryString()
+    public function testCanNotRegisterUnknownFactoryString(): void
     {
         /**
          * @var ServiceLocatorInterface $serviceLocator
