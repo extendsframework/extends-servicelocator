@@ -11,17 +11,10 @@ use ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver;
 use ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 
-class ServiceLocatorFactory
+class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
 {
     /**
-     * Create ServiceLocator for $resolvers.
-     *
-     * When looking for a resolver to create the requested service, the resolvers will be looped sequentially. So, it
-     * is recommended to begin with the most used resolver(s) in $resolvers.
-     *
-     * @param array $resolvers
-     * @return ServiceLocatorInterface
-     * @throws ServiceLocatorException
+     * @inheritDoc
      */
     public function create(array $resolvers): ServiceLocatorInterface
     {
