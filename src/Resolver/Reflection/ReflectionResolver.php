@@ -79,11 +79,11 @@ class ReflectionResolver implements ResolverInterface
      *
      * @param string                  $class
      * @param ServiceLocatorInterface $serviceLocator
-     * @return array
+     * @return iterable
      * @throws ResolverException
      * @throws ServiceLocatorException
      */
-    protected function values(string $class, ServiceLocatorInterface $serviceLocator): array
+    protected function values(string $class, ServiceLocatorInterface $serviceLocator): iterable
     {
         $values = [];
         $constructor = (new ReflectionClass($class))->getConstructor();

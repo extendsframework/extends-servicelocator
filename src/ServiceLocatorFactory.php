@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
@@ -16,7 +16,7 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
     /**
      * @inheritDoc
      */
-    public function create(array $resolvers): ServiceLocatorInterface
+    public function create(iterable $resolvers): ServiceLocatorInterface
     {
         $serviceLocator = new ServiceLocator();
         foreach ($resolvers as $name => $services) {
@@ -32,12 +32,12 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
      *
      * An exception will be thrown when a resolver for $name can not be found.
      *
-     * @param string $name
-     * @param array  $services
+     * @param string   $name
+     * @param iterable $services
      * @return ResolverInterface
      * @throws ServiceLocatorException
      */
-    protected function resolver(string $name, array $services): ResolverInterface
+    protected function resolver(string $name, iterable $services): ResolverInterface
     {
         switch ($name) {
             case 'aliases':
