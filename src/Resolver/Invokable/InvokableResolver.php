@@ -13,7 +13,7 @@ class InvokableResolver implements ResolverInterface
     /**
      * An associative array which holds the invokables.
      *
-     * @var
+     * @var array
      */
     protected $invokables = [];
 
