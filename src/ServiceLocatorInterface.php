@@ -19,8 +19,7 @@ interface ServiceLocatorInterface
     /**
      * Get a service with the name $key.
      *
-     * An exception will be thrown when $key is invalid, no service is found for $key or the returned service is not
-     * a object.
+     * An exception will be thrown when $key is invalid or no service is found for $key.
      *
      * @param string $key
      * @return mixed
