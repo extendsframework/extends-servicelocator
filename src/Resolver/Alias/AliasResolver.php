@@ -47,7 +47,7 @@ class AliasResolver implements ResolverInterface
      */
     public function register(string $key, string $alias): AliasResolver
     {
-        $this->aliases[$key] = (string)$alias;
+        $this->aliases[$key] = $alias;
 
         return $this;
     }
