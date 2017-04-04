@@ -51,7 +51,7 @@ class InvokableResolver implements ResolverInterface
      */
     public function register($key, $invokable): InvokableResolver
     {
-        if (!\class_exists($invokable)) {
+        if (!class_exists($invokable)) {
             throw UnknownInvokableType::forNonExistingClass($invokable);
         }
 

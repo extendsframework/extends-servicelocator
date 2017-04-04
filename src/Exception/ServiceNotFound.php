@@ -15,7 +15,7 @@ class ServiceNotFound extends ServiceLocatorException
      */
     public static function forService(string $key): ServiceLocatorException
     {
-        return new static(\sprintf(
+        return new static(sprintf(
             'Service with key "%s" MUST exist.',
             $key
         ));

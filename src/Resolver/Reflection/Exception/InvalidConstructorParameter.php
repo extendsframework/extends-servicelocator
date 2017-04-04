@@ -15,7 +15,7 @@ class InvalidConstructorParameter extends ResolverException
      */
     public static function forName(string $name): ResolverException
     {
-        return new static(\sprintf(
+        return new static(sprintf(
             'Parameter "%s" MUST be a class.',
             $name
         ));

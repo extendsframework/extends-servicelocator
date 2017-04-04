@@ -37,7 +37,7 @@ class FactoryResolver implements ResolverInterface
         }
 
         $factory = $this->factories[$key];
-        if (\is_string($factory)) {
+        if (is_string($factory)) {
             $factory = new $factory();
             $this->factories[$key] = $factory;
         }
@@ -58,10 +58,10 @@ class FactoryResolver implements ResolverInterface
      */
     public function register(string $key, $factory): FactoryResolver
     {
-        if (\is_string($factory) && !\is_subclass_of($factory, ServiceFactoryInterface::class, true)) {
+        if (is_string($factory) && !is_subclass_of($factory, ServiceFactoryInterface::class, true)) {
             throw UnknownServiceFactoryType::forString($factory);
         }
-        if (!\is_string($factory) && !$factory instanceof ServiceFactoryInterface) {
+        if (!is_string($factory) && !$factory instanceof ServiceFactoryInterface) {
             throw UnknownServiceFactoryType::forObject($factory);
         }
 

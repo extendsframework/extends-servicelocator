@@ -15,7 +15,7 @@ class UnknownServiceFactoryType extends ResolverException
      */
     public static function forString(string $factory): ResolverException
     {
-        return new static(\sprintf(
+        return new static(sprintf(
             'Factory MUST be a FQCN to an instance of Factory, got "%s".',
             $factory
         ));
@@ -29,9 +29,9 @@ class UnknownServiceFactoryType extends ResolverException
      */
     public static function forObject($factory): ResolverException
     {
-        return new static(\sprintf(
+        return new static(sprintf(
             'Factory MUST be object and instance of Factory, got "%s".',
-            \is_object($factory) ? \get_class($factory) : \gettype($factory)
+            is_object($factory) ? get_class($factory) : gettype($factory)
         ));
     }
 }

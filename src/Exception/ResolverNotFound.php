@@ -15,7 +15,7 @@ class ResolverNotFound extends ServiceLocatorException
      */
     public static function forName(string $name): ServiceLocatorException
     {
-        return new static(\sprintf(
+        return new static(sprintf(
             'Resolver MUST be registered with the factory, got "%s".',
             $name
         ));

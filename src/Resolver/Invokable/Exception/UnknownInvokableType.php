@@ -15,7 +15,7 @@ class UnknownInvokableType extends ResolverException
      */
     public static function forNonExistingClass(string $invokable): ResolverException
     {
-        return new static(\sprintf(
+        return new static(sprintf(
             'Invokable MUST be a valid class, got "%s".',
             $invokable
         ));
