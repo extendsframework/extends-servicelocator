@@ -63,7 +63,7 @@ class ReflectionResolverTest extends TestCase
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::values()
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolverException::forFailedReflection()
      * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolverException
-     * @expectedExceptionMessage Failed to reflect class "A" with reason "Class A does not exist".
+     * @expectedExceptionMessage Failed to reflect class "A".
      */
     public function testCanNotCreateClassWithNonExistingClass(): void
     {

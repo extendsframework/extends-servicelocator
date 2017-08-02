@@ -19,10 +19,9 @@ class ReflectionResolverException extends ResolverException
     public static function forFailedReflection(ReflectionException $exception, string $class): ResolverException
     {
         return new static(sprintf(
-            'Failed to reflect class "%s" with reason "%s".',
-            $class,
-            $exception->getMessage()
-        ));
+            'Failed to reflect class "%s".',
+            $class
+        ), 0, $exception);
 
     }
 
