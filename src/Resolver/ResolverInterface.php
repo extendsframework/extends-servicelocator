@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver;
 
@@ -26,4 +26,15 @@ interface ResolverInterface
      * @return mixed
      */
     public function get(string $key, ServiceLocatorInterface $serviceLocator);
+
+    /**
+     * Create a new resolver.
+     *
+     * Throws an exception when creation fails.
+     *
+     * @param array $services
+     * @return ResolverInterface
+     * @throws ResolverException
+     */
+    public static function create(array $services): ResolverInterface;
 }

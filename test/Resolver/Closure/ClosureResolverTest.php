@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Closure;
 
@@ -24,13 +24,11 @@ class ClosureResolverTest extends TestCase
         $resolver = new ClosureResolver();
         $service = $resolver
             ->register('foo', function () {
-                $service = new stdClass();
-
-                return $service;
+                return new stdClass();
             })
             ->get('foo', $serviceLocator);
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 
     /**
@@ -49,13 +47,25 @@ class ClosureResolverTest extends TestCase
         $resolver = new ClosureResolver();
         $service = $resolver
             ->register('foo', function () {
-                $service = new stdClass();
-
-                return $service;
+                return new stdClass();
             })
             ->unregister('foo')
             ->get('foo', $serviceLocator);
 
-        $this->assertNull($service);
+        static::assertNull($service);
+    }
+
+    /**
+     * /**
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::create()
+     */
+    public function testCanCreateClosureResolver(): void
+    {
+        $resolver = ClosureResolver::create([
+            'foo' => function () {
+            }
+        ]);
+
+        static::assertInstanceOf(ClosureResolver::class, $resolver);
     }
 }

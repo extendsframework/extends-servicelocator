@@ -1,9 +1,8 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
-use ExtendsFramework\ServiceLocator\Exception\ServiceNotFound;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 
 class ServiceLocator implements ServiceLocatorInterface
@@ -40,7 +39,7 @@ class ServiceLocator implements ServiceLocatorInterface
     public function get(string $key)
     {
         if (!$this->has($key)) {
-            throw ServiceNotFound::forService($key);
+            throw ServiceLocatorException::forServiceNotFound($key);
         }
 
         $service = $this->service($key);

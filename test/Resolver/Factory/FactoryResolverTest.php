@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
@@ -19,7 +19,7 @@ class FactoryResolverTest extends TestCase
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $factory = $this->createMock(ServiceFactoryInterface::class);
         $factory
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('create')
             ->with('foo', $serviceLocator)
             ->willReturn(new stdClass());
@@ -33,7 +33,7 @@ class FactoryResolverTest extends TestCase
             ->register('foo', $factory)
             ->get('foo', $serviceLocator);
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 
     /**
@@ -53,7 +53,7 @@ class FactoryResolverTest extends TestCase
             ->register('foo', Factory::class)
             ->get('foo', $serviceLocator);
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 
     /**
@@ -77,13 +77,13 @@ class FactoryResolverTest extends TestCase
             ->unregister('foo')
             ->get('foo', $serviceLocator);
 
-        $this->assertNull($service);
+        static::assertNull($service);
     }
 
     /**
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\UnknownServiceFactoryType::forString()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\UnknownServiceFactoryType
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException::forUnknownStringType()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException
      * @expectedExceptionMessage Factory MUST be a FQCN to an instance of Factory, got "bar".
      */
     public function testCanNotRegisterUnknownFactoryString(): void
@@ -94,14 +94,32 @@ class FactoryResolverTest extends TestCase
 
     /**
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\UnknownServiceFactoryType::forObject()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\UnknownServiceFactoryType
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException::forUnknownStringObject()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException
      * @expectedExceptionMessage Factory MUST be object and instance of Factory, got "stdClass".
      */
     public function testCanNotRegisterUnknownFactoryClass(): void
     {
         $resolver = new FactoryResolver();
         $resolver->register('foo', new stdClass());
+    }
+
+    /**
+     * /**
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::create()
+     */
+    public function testCanCreateFactoryResolver(): void
+    {
+        $factory = $this->createMock(ServiceFactoryInterface::class);
+
+        /**
+         * @var ServiceFactoryInterface $factory
+         */
+        $resolver = FactoryResolver::create([
+            'foo' => $factory
+        ]);
+
+        static::assertInstanceOf(FactoryResolver::class, $resolver);
     }
 }
 

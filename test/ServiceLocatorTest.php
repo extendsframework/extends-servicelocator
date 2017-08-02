@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
@@ -20,13 +20,13 @@ class ServiceLocatorTest extends TestCase
     {
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('get')
             ->with('A')
             ->willReturn(new stdClass());
 
         $resolver
-            ->expects($this->exactly(2))
+            ->expects(static::exactly(2))
             ->method('has')
             ->with('A')
             ->willReturn(true);
@@ -39,7 +39,7 @@ class ServiceLocatorTest extends TestCase
             ->register($resolver, 'invokables')
             ->get('A');
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 
     /**
@@ -53,13 +53,13 @@ class ServiceLocatorTest extends TestCase
     {
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('get')
             ->with('A')
             ->willReturn(new stdClass());
 
         $resolver
-            ->expects($this->exactly(2))
+            ->expects(static::exactly(2))
             ->method('has')
             ->with('A')
             ->willReturn(true);
@@ -76,7 +76,7 @@ class ServiceLocatorTest extends TestCase
             ->unregister('invokables')
             ->get('A');
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 
     /**
@@ -86,8 +86,8 @@ class ServiceLocatorTest extends TestCase
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::has()
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::service()
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::resolver()
-     * @covers                   \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound::forService()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorException::forServiceNotFound()
+     * @expectedException        \ExtendsFramework\ServiceLocator\ServiceLocatorException
      * @expectedExceptionMessage Service with key "A" MUST exist.
      */
     public function testCanUnRegisterResolverAndCanNotGetServiceForKey(): void
@@ -103,6 +103,6 @@ class ServiceLocatorTest extends TestCase
             ->unregister('invokables')
             ->get('A');
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 }

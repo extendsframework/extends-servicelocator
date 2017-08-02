@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Closure;
 
@@ -36,6 +36,20 @@ class ClosureResolver implements ResolverInterface
         }
 
         return $this->closures[$key]($key, $serviceLocator);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static;
+
+        foreach ($services as $key => $closure) {
+            $resolver->register($key, $closure);
+        }
+
+        return $resolver;
     }
 
     /**

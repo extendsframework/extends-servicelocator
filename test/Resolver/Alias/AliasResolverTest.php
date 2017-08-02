@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Alias;
 
@@ -18,7 +18,7 @@ class AliasResolverTest extends TestCase
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('get')
             ->with('bar')
             ->willReturn(new stdClass());
@@ -31,7 +31,7 @@ class AliasResolverTest extends TestCase
             ->register('foo', 'bar')
             ->get('foo', $serviceLocator);
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 
     /**
@@ -53,6 +53,19 @@ class AliasResolverTest extends TestCase
             ->unregister('foo')
             ->get('foo', $serviceLocator);
 
-        $this->assertNull($service);
+        static::assertNull($service);
+    }
+
+    /**
+     * /**
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::create()
+     */
+    public function testCanCreateAliasResolver(): void
+    {
+        $resolver = AliasResolver::create([
+            'foo' => 'bar'
+        ]);
+
+        static::assertInstanceOf(AliasResolver::class, $resolver);
     }
 }

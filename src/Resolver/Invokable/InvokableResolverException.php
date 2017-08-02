@@ -1,11 +1,11 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
-namespace ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception;
+namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
 use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 
-class UnknownInvokableType extends ResolverException
+class InvokableResolverException extends ResolverException
 {
     /**
      * Returns an new instance when $invokable is not a existing class.

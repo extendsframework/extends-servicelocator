@@ -3,12 +3,6 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
-use ExtendsFramework\ServiceLocator\Exception\ResolverNotFound;
-use ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver;
-use ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver;
-use ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver;
-use ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver;
-use ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 
 class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
@@ -20,7 +14,7 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
     {
         $serviceLocator = new ServiceLocator();
         foreach ($resolvers as $name => $services) {
-            $resolver = $this->resolver($name, $services);
+            $resolver = $this->createResolver($name, $services);
             $serviceLocator->register($resolver, $name);
         }
 
@@ -32,37 +26,18 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
      *
      * An exception will be thrown when a resolver for $name can not be found.
      *
-     * @param string   $name
+     * @param string   $resolver
      * @param iterable $services
      * @return ResolverInterface
      * @throws ServiceLocatorException
      */
-    protected function resolver(string $name, iterable $services): ResolverInterface
+    protected function createResolver(string $resolver, iterable $services): ResolverInterface
     {
-        switch ($name) {
-            case 'aliases':
-                $resolver = new AliasResolver();
-                break;
-            case 'closures':
-                $resolver = new ClosureResolver();
-                break;
-            case 'factories':
-                $resolver = new FactoryResolver();
-                break;
-            case 'invokables':
-                $resolver = new InvokableResolver();
-                break;
-            case 'reflections':
-                $resolver = new ReflectionResolver();
-                break;
-            default:
-                throw ResolverNotFound::forName($name);
+        if (is_subclass_of($resolver, ResolverInterface::class, true) === false) {
+            throw ServiceLocatorException::forInvalidResolverType($resolver);
         }
 
-        foreach ($services as $key => $value) {
-            $resolver->register($key, $value);
-        }
-
-        return $resolver;
+        /** @var ResolverInterface $resolver */
+        return $resolver::create($services);
     }
 }

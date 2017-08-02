@@ -1,14 +1,14 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
-use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidConstructorParameter;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 
 class ReflectionResolver implements ResolverInterface
@@ -41,6 +41,20 @@ class ReflectionResolver implements ResolverInterface
         $values = $this->values($class, $serviceLocator);
 
         return new $class(...$values);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static;
+
+        foreach ($services as $key => $class) {
+            $resolver->register($key, $class);
+        }
+
+        return $resolver;
     }
 
     /**
@@ -85,13 +99,18 @@ class ReflectionResolver implements ResolverInterface
      */
     protected function values(string $class, ServiceLocatorInterface $serviceLocator): iterable
     {
+        try {
+            $constructor = (new ReflectionClass($class))->getConstructor();
+        } catch (ReflectionException $exception) {
+            throw ReflectionResolverException::forFailedReflection($exception, $class);
+        }
+
         $values = [];
-        $constructor = (new ReflectionClass($class))->getConstructor();
         if ($constructor instanceof ReflectionMethod) {
             foreach ($constructor->getParameters() as $parameter) {
                 $reflection = $parameter->getClass();
                 if (!$reflection instanceof ReflectionClass) {
-                    throw InvalidConstructorParameter::forName($parameter->getName());
+                    throw ReflectionResolverException::forInvalidParameter($parameter);
                 }
 
                 $values[] = $serviceLocator->get($reflection->getName());

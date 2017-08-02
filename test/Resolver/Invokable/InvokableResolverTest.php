@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
@@ -26,7 +26,7 @@ class InvokableResolverTest extends TestCase
             ->register('foo', stdClass::class)
             ->get('foo', $serviceLocator);
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        static::assertInstanceOf(stdClass::class, $service);
     }
 
     /**
@@ -48,13 +48,13 @@ class InvokableResolverTest extends TestCase
             ->unregister('foo')
             ->get('foo', $serviceLocator);
 
-        $this->assertNull($service);
+        static::assertNull($service);
     }
 
     /**
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\UnknownInvokableType::forNonExistingClass()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\UnknownInvokableType
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolverException::forNonExistingClass()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolverException
      * @expectedExceptionMessage Invokable MUST be a valid class, got "bar".
      */
     public function testCanNotRegisterUnknownFactoryString(): void
@@ -64,5 +64,19 @@ class InvokableResolverTest extends TestCase
          */
         $resolver = new InvokableResolver();
         $resolver->register('foo', 'bar');
+    }
+
+
+    /**
+     * /**
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::create()
+     */
+    public function testCanCreateInvokableResolver(): void
+    {
+        $resolver = InvokableResolver::create([
+            'foo' => stdClass::class
+        ]);
+
+        static::assertInstanceOf(InvokableResolver::class, $resolver);
     }
 }

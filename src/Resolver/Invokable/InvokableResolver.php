@@ -1,9 +1,8 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
-use ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\UnknownInvokableType;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
@@ -40,6 +39,20 @@ class InvokableResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static;
+
+        foreach ($services as $key => $invokable) {
+            $resolver->register($key, $invokable);
+        }
+
+        return $resolver;
+    }
+
+    /**
      * Register $invokable for $key.
      *
      * An exception will be thrown when $invokable is not a existing class.
@@ -52,7 +65,7 @@ class InvokableResolver implements ResolverInterface
     public function register($key, $invokable): InvokableResolver
     {
         if (!class_exists($invokable)) {
-            throw UnknownInvokableType::forNonExistingClass($invokable);
+            throw InvokableResolverException::forNonExistingClass($invokable);
         }
 
         $this->invokables[$key] = (string)$invokable;

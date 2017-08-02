@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Alias;
 
@@ -36,6 +36,20 @@ class AliasResolver implements ResolverInterface
         }
 
         return $serviceLocator->get($this->aliases[$key]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static();
+
+        foreach ($services as $key => $alias) {
+            $resolver->register($key, $alias);
+        }
+
+        return $resolver;
     }
 
     /**
