@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
+use Exception;
+use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreationFailed;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use Throwable;
 
 class FactoryResolverTest extends TestCase
 {
@@ -105,7 +108,6 @@ class FactoryResolverTest extends TestCase
     }
 
     /**
-     * /**
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::create()
      */
     public function testCanCreateFactoryResolver(): void
@@ -120,6 +122,38 @@ class FactoryResolverTest extends TestCase
         ]);
 
         static::assertInstanceOf(FactoryResolver::class, $resolver);
+    }
+
+    /**
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::get()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreationFailed::__construct()
+     */
+    public function testCanCatchServiceCreationException(): void
+    {
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+        $exception = new Exception();
+        $factory = $this->createMock(ServiceFactoryInterface::class);
+        $factory
+            ->expects($this->once())
+            ->method('create')
+            ->with('foo', $serviceLocator)
+            ->willThrowException($exception);
+
+        /**
+         * @var ServiceLocatorInterface $serviceLocator
+         * @var ServiceFactoryInterface $factory
+         */
+        $resolver = new FactoryResolver();
+
+        try {
+            $resolver
+                ->register('foo', $factory)
+                ->get('foo', $serviceLocator);
+        } catch (Throwable $throwable) {
+            $this->assertInstanceOf(ServiceCreationFailed::class, $throwable);
+            $this->assertSame('Failed to create service for key "foo".', $throwable->getMessage());
+            $this->assertSame($exception, $throwable->getPrevious());
+        }
     }
 }
 

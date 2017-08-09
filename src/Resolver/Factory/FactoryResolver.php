@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
+use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreationFailed;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
+use Throwable;
 
 class FactoryResolver implements ResolverInterface
 {
@@ -41,7 +43,11 @@ class FactoryResolver implements ResolverInterface
             $this->factories[$key] = $factory;
         }
 
-        return $factory->create($key, $serviceLocator);
+        try {
+            return $factory->create($key, $serviceLocator);
+        } catch (Throwable $exception) {
+            throw new ServiceCreationFailed($key, $exception);
+        }
     }
 
     /**

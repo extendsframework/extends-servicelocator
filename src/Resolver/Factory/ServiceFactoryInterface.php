@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
-use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreationFailed;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
+use Throwable;
 
 interface ServiceFactoryInterface
 {
@@ -14,7 +14,7 @@ interface ServiceFactoryInterface
      * @param string                  $key
      * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
-     * @throws ServiceCreationFailed
+     * @throws Throwable
      */
     public function create(string $key, ServiceLocatorInterface $serviceLocator);
 }
