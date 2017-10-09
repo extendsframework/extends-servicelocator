@@ -10,11 +10,15 @@ use stdClass;
 class ClosureResolverTest extends TestCase
 {
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::has()
+     * Register.
+     *
+     * Test that a new closure can be registered.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::addClosure()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::hasService()
      */
-    public function testCanRegisterClosureAndGetServiceForKey(): void
+    public function testRegister(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -23,21 +27,23 @@ class ClosureResolverTest extends TestCase
          */
         $resolver = new ClosureResolver();
         $service = $resolver
-            ->register('foo', function () {
+            ->addClosure('foo', function () {
                 return new stdClass();
             })
-            ->get('foo', $serviceLocator);
+            ->getService('foo', $serviceLocator);
 
-        static::assertInstanceOf(stdClass::class, $service);
+        $this->assertInstanceOf(stdClass::class, $service);
     }
 
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::unregister()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::has()
+     * Has.
+     *
+     * Test that resolver can check for service existence.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::hasService()
      */
-    public function testCanUnregisterClosureAndNotGetServiceForKey(): void
+    public function testHas(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -45,27 +51,8 @@ class ClosureResolverTest extends TestCase
          * @var ServiceLocatorInterface $serviceLocator
          */
         $resolver = new ClosureResolver();
-        $service = $resolver
-            ->register('foo', function () {
-                return new stdClass();
-            })
-            ->unregister('foo')
-            ->get('foo', $serviceLocator);
 
-        static::assertNull($service);
-    }
-
-    /**
-     * /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::create()
-     */
-    public function testCanCreateClosureResolver(): void
-    {
-        $resolver = ClosureResolver::create([
-            'foo' => function () {
-            }
-        ]);
-
-        static::assertInstanceOf(ClosureResolver::class, $resolver);
+        $this->assertFalse($resolver->hasService('foo'));
+        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 }

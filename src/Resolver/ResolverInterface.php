@@ -14,7 +14,7 @@ interface ResolverInterface
      * @param string $key
      * @return bool
      */
-    public function has(string $key): bool;
+    public function hasService(string $key): bool;
 
     /**
      * Get service for $key.
@@ -25,16 +25,5 @@ interface ResolverInterface
      * @throws ServiceLocatorException
      * @return mixed
      */
-    public function get(string $key, ServiceLocatorInterface $serviceLocator);
-
-    /**
-     * Create a new resolver.
-     *
-     * Throws an exception when creation fails.
-     *
-     * @param array $services
-     * @return ResolverInterface
-     * @throws ResolverException
-     */
-    public static function create(array $services): ResolverInterface;
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator);
 }

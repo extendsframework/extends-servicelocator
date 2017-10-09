@@ -18,9 +18,9 @@ class AliasResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has(string $key): bool
+    public function hasService(string $key): bool
     {
-        return isset($this->aliases[$key]);
+        return array_key_exists($key, $this->aliases) === true;
     }
 
     /**
@@ -29,27 +29,13 @@ class AliasResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function get(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
     {
-        if (!$this->has($key)) {
+        if ($this->hasService($key) === false) {
             return null;
         }
 
-        return $serviceLocator->get($this->aliases[$key]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function create(array $services): ResolverInterface
-    {
-        $resolver = new static();
-
-        foreach ($services as $key => $alias) {
-            $resolver->register($key, $alias);
-        }
-
-        return $resolver;
+        return $serviceLocator->getService($this->aliases[$key]);
     }
 
     /**
@@ -59,22 +45,9 @@ class AliasResolver implements ResolverInterface
      * @param string $alias
      * @return AliasResolver
      */
-    public function register(string $key, string $alias): AliasResolver
+    public function addAlias(string $key, string $alias): AliasResolver
     {
         $this->aliases[$key] = $alias;
-
-        return $this;
-    }
-
-    /**
-     * Unregister alias for $key.
-     *
-     * @param string $key
-     * @return AliasResolver
-     */
-    public function unregister(string $key): AliasResolver
-    {
-        unset($this->aliases[$key]);
 
         return $this;
     }

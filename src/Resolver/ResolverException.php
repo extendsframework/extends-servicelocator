@@ -5,6 +5,6 @@ namespace ExtendsFramework\ServiceLocator\Resolver;
 
 use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 
-class ResolverException extends ServiceLocatorException
+interface ResolverException extends ServiceLocatorException
 {
 }

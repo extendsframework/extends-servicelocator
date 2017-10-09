@@ -8,13 +8,10 @@ interface ServiceLocatorInterface
     /**
      * Check if the service locator has a service with the name $key.
      *
-     * An exception will be thrown when $key is invalid.
-     *
      * @param string $key
      * @return bool
-     * @throws ServiceLocatorException
      */
-    public function has(string $key): bool;
+    public function hasService(string $key): bool;
 
     /**
      * Get a service with the name $key.
@@ -25,5 +22,5 @@ interface ServiceLocatorInterface
      * @return mixed
      * @throws ServiceLocatorException
      */
-    public function get(string $key);
+    public function getService(string $key);
 }

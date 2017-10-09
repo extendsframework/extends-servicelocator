@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
+use ExtendsFramework\ServiceLocator\Exception\ServiceNotFound;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 
 class ServiceLocator implements ServiceLocatorInterface
@@ -24,29 +25,23 @@ class ServiceLocator implements ServiceLocatorInterface
     /**
      * @inheritDoc
      */
-    public function has(string $key): bool
+    public function hasService(string $key): bool
     {
-        if (isset($this->services[$key])) {
-            return true;
-        }
-
-        return $this->resolver($key) instanceof ResolverInterface;
+        return $this->getCachedService($key) !== null || $this->getResolver($key) instanceof ResolverInterface;
     }
 
     /**
      * @inheritDoc
      */
-    public function get(string $key)
+    public function getService(string $key)
     {
-        if (!$this->has($key)) {
-            throw ServiceLocatorException::forServiceNotFound($key);
+        if ($this->hasService($key) === false) {
+            throw new ServiceNotFound($key);
         }
 
-        $service = $this->service($key);
-        if (!$service) {
-            $resolver = $this->resolver($key);
-            $service = $resolver->get($key, $this);
-            $this->services[$key] = $service;
+        $service = $this->getCachedService($key);
+        if ($service === null) {
+            $this->services[$key] = $service = $this->getResolver($key)->getService($key, $this);
         }
 
         return $service;
@@ -61,22 +56,9 @@ class ServiceLocator implements ServiceLocatorInterface
      * @param string            $key
      * @return ServiceLocator
      */
-    public function register(ResolverInterface $resolver, string $key): ServiceLocator
+    public function addResolver(ResolverInterface $resolver, string $key): ServiceLocator
     {
         $this->resolvers[$key] = $resolver;
-
-        return $this;
-    }
-
-    /**
-     * Unregister the resolver for $key.
-     *
-     * @param string $key
-     * @return ServiceLocator
-     */
-    public function unregister(string $key): ServiceLocator
-    {
-        unset($this->resolvers[$key]);
 
         return $this;
     }
@@ -89,10 +71,10 @@ class ServiceLocator implements ServiceLocatorInterface
      * @param string $key
      * @return ResolverInterface
      */
-    protected function resolver(string $key): ?ResolverInterface
+    protected function getResolver(string $key): ?ResolverInterface
     {
         foreach ($this->resolvers as $resolver) {
-            if ($resolver->has($key)) {
+            if ($resolver->hasService($key) === true) {
                 return $resolver;
             }
         }
@@ -108,9 +90,9 @@ class ServiceLocator implements ServiceLocatorInterface
      * @param string $key
      * @return mixed
      */
-    protected function service(string $key)
+    protected function getCachedService(string $key)
     {
-        if (isset($this->services[$key])) {
+        if (array_key_exists($key, $this->services) === true) {
             return $this->services[$key];
         }
 

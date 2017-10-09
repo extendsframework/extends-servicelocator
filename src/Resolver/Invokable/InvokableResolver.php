@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
+use ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 
@@ -19,37 +19,23 @@ class InvokableResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has(string $key): bool
+    public function hasService(string $key): bool
     {
-        return isset($this->invokables[$key]);
+        return array_key_exists($key, $this->invokables) === true;
     }
 
     /**
      * @inheritDoc
      */
-    public function get(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
     {
-        if (!$this->has($key)) {
+        if ($this->hasService($key) === false) {
             return null;
         }
 
         $invokable = $this->invokables[$key];
 
         return new $invokable();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function create(array $services): ResolverInterface
-    {
-        $resolver = new static;
-
-        foreach ($services as $key => $invokable) {
-            $resolver->register($key, $invokable);
-        }
-
-        return $resolver;
     }
 
     /**
@@ -60,28 +46,15 @@ class InvokableResolver implements ResolverInterface
      * @param string $key
      * @param string $invokable
      * @return InvokableResolver
-     * @throws ResolverException
+     * @throws InvokableResolverException
      */
-    public function register($key, $invokable): InvokableResolver
+    public function addInvokable($key, $invokable): InvokableResolver
     {
-        if (!class_exists($invokable)) {
-            throw InvokableResolverException::forNonExistingClass($invokable);
+        if (class_exists($invokable) === false) {
+            throw new NonExistingClass($invokable);
         }
 
         $this->invokables[$key] = (string)$invokable;
-
-        return $this;
-    }
-
-    /**
-     * Unregister invokable for $key.
-     *
-     * @param string $key
-     * @return InvokableResolver
-     */
-    public function unregister(string $key): InvokableResolver
-    {
-        unset($this->invokables[$key]);
 
         return $this;
     }

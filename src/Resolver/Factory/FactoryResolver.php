@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
-use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreationFailed;
-use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
+use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType;
+use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use Throwable;
@@ -14,16 +14,16 @@ class FactoryResolver implements ResolverInterface
     /**
      * An associative array which holds the factories.
      *
-     * @var array
+     * @var ServiceFactoryInterface[]
      */
     protected $factories = [];
 
     /**
      * @inheritDoc
      */
-    public function has(string $key): bool
+    public function hasService(string $key): bool
     {
-        return isset($this->factories[$key]);
+        return array_key_exists($key, $this->factories) === true;
     }
 
     /**
@@ -31,73 +31,42 @@ class FactoryResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function get(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
     {
-        if (!$this->has($key)) {
+        if ($this->hasService($key) === false) {
             return null;
         }
 
         $factory = $this->factories[$key];
-        if (is_string($factory)) {
+        if (is_string($factory) === true) {
             $factory = new $factory();
             $this->factories[$key] = $factory;
         }
 
         try {
-            return $factory->create($key, $serviceLocator);
+            return $factory->createService($key, $serviceLocator);
         } catch (Throwable $exception) {
-            throw new ServiceCreationFailed($key, $exception);
+            throw new ServiceCreateFailed($key, $exception);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function create(array $services): ResolverInterface
-    {
-        $resolver = new static;
-
-        foreach ($services as $key => $factory) {
-            $resolver->register($key, $factory);
-        }
-
-        return $resolver;
     }
 
     /**
      * Register $factory for $key.
      *
-     * The $factory can be a string or object. When string or object are not an subclass or instance of
-     * ServiceFactoryInterface, an exception will be thrown.
+     * An exception will be thrown when $factory is not an subclass of ServiceFactoryInterface.
      *
-     * @param string                         $key
-     * @param ServiceFactoryInterface|string $factory
+     * @param string $key
+     * @param string $factory
      * @return FactoryResolver
-     * @throws ResolverException
+     * @throws FactoryResolverException
      */
-    public function register(string $key, $factory): FactoryResolver
+    public function addFactory(string $key, string $factory): FactoryResolver
     {
-        if (is_string($factory) && !is_subclass_of($factory, ServiceFactoryInterface::class, true)) {
-            throw FactoryResolverException::forUnknownStringType($factory);
-        }
-        if (!is_string($factory) && !$factory instanceof ServiceFactoryInterface) {
-            throw FactoryResolverException::forUnknownStringObject($factory);
+        if (is_string($factory) === false || is_subclass_of($factory, ServiceFactoryInterface::class, true) === false) {
+            throw new InvalidFactoryType($factory);
         }
 
         $this->factories[$key] = $factory;
-
-        return $this;
-    }
-
-    /**
-     * Unregister factory for $key.
-     *
-     * @param string $key
-     * @return FactoryResolver
-     */
-    public function unregister(string $key): FactoryResolver
-    {
-        unset($this->factories[$key]);
 
         return $this;
     }

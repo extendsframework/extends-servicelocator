@@ -3,48 +3,23 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
-use Exception;
-use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreationFailed;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use stdClass;
-use Throwable;
 
 class FactoryResolverTest extends TestCase
 {
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::has()
+     * Register.
+     *
+     * Test that a new factory fqcn can be registered.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::hasService()
      */
-    public function testCanRegisterFactoryClassAndGetServiceForKey(): void
-    {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-        $factory = $this->createMock(ServiceFactoryInterface::class);
-        $factory
-            ->expects(static::once())
-            ->method('create')
-            ->with('foo', $serviceLocator)
-            ->willReturn(new stdClass());
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         * @var ServiceFactoryInterface $factory
-         */
-        $resolver = new FactoryResolver();
-        $service = $resolver
-            ->register('foo', $factory)
-            ->get('foo', $serviceLocator);
-
-        static::assertInstanceOf(stdClass::class, $service);
-    }
-
-    /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::has()
-     */
-    public function testCanRegisterFactoryStringAndGetServiceForKey(): void
+    public function testRegister(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -53,117 +28,92 @@ class FactoryResolverTest extends TestCase
          */
         $resolver = new FactoryResolver();
         $service = $resolver
-            ->register('foo', Factory::class)
-            ->get('foo', $serviceLocator);
+            ->addFactory('foo', FactoryStub::class)
+            ->getService('foo', $serviceLocator);
 
-        static::assertInstanceOf(stdClass::class, $service);
+        $this->assertInstanceOf(stdClass::class, $service);
     }
 
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::unregister()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::has()
+     * Has.
+     *
+     * Test that resolver can check for service existence.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::hasService()
      */
-    public function testCanUnregisterAndNotGetServiceForKey(): void
+    public function testHas(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-        $factory = $this->createMock(ServiceFactoryInterface::class);
 
         /**
          * @var ServiceLocatorInterface $serviceLocator
-         * @var ServiceFactoryInterface $factory
          */
         $resolver = new FactoryResolver();
-        $service = $resolver
-            ->register('foo', $factory)
-            ->unregister('foo')
-            ->get('foo', $serviceLocator);
 
-        static::assertNull($service);
+        $this->assertFalse($resolver->hasService('foo'));
+        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 
     /**
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException::forUnknownStringType()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException
-     * @expectedExceptionMessage Factory MUST be a FQCN to an instance of Factory, got "bar".
+     * Register.
+     *
+     * Test that a invalid factory fqcn can not be registered.
+     *
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType::__construct()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType
+     * @expectedExceptionMessage Factory must be a subclass of ServiceFactoryInterface, got "bar".
      */
-    public function testCanNotRegisterUnknownFactoryString(): void
+    public function testRegisterInvalidFqcn(): void
     {
         $resolver = new FactoryResolver();
-        $resolver->register('foo', 'bar');
+        $resolver->addFactory('foo', 'bar');
     }
 
     /**
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException::forUnknownStringObject()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolverException
-     * @expectedExceptionMessage Factory MUST be object and instance of Factory, got "stdClass".
+     * Service exception.
+     *
+     * Test that exception from factory can be caught.
+     *
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed::__construct()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed
+     * @expectedExceptionMessage Failed to create service for key "foo". See previous exception for more details.
      */
-    public function testCanNotRegisterUnknownFactoryClass(): void
-    {
-        $resolver = new FactoryResolver();
-        $resolver->register('foo', new stdClass());
-    }
-
-    /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::create()
-     */
-    public function testCanCreateFactoryResolver(): void
-    {
-        $factory = $this->createMock(ServiceFactoryInterface::class);
-
-        /**
-         * @var ServiceFactoryInterface $factory
-         */
-        $resolver = FactoryResolver::create([
-            'foo' => $factory
-        ]);
-
-        static::assertInstanceOf(FactoryResolver::class, $resolver);
-    }
-
-    /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreationFailed::__construct()
-     */
-    public function testCanCatchServiceCreationException(): void
+    public function testServiceException(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-        $exception = new Exception();
-        $factory = $this->createMock(ServiceFactoryInterface::class);
-        $factory
-            ->expects($this->once())
-            ->method('create')
-            ->with('foo', $serviceLocator)
-            ->willThrowException($exception);
 
         /**
          * @var ServiceLocatorInterface $serviceLocator
-         * @var ServiceFactoryInterface $factory
          */
         $resolver = new FactoryResolver();
-
-        try {
-            $resolver
-                ->register('foo', $factory)
-                ->get('foo', $serviceLocator);
-        } catch (Throwable $throwable) {
-            $this->assertInstanceOf(ServiceCreationFailed::class, $throwable);
-            $this->assertSame('Failed to create service for key "foo".', $throwable->getMessage());
-            $this->assertSame($exception, $throwable->getPrevious());
-        }
+        $resolver
+            ->addFactory('foo', FailedFactory::class)
+            ->getService('foo', $serviceLocator);
     }
 }
 
-class Factory implements ServiceFactoryInterface
+class FactoryStub implements ServiceFactoryInterface
 {
     /**
      * @inheritDoc
      */
-    public function create(string $key, ServiceLocatorInterface $serviceLocator)
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator)
     {
         return new stdClass();
+    }
+}
+
+class FailedFactory implements ServiceFactoryInterface
+{
+    /**
+     * @inheritDoc
+     */
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator)
+    {
+        throw new RuntimeException('Connection failed.');
     }
 }

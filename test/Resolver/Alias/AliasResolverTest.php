@@ -10,16 +10,20 @@ use stdClass;
 class AliasResolverTest extends TestCase
 {
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::has()
+     * Register.
+     *
+     * Test that a new alias can be registered.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::addAlias()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::hasService()
      */
-    public function testCanRegisterAliasAndGetServiceForKey(): void
+    public function testRegister(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
         $serviceLocator
-            ->expects(static::once())
-            ->method('get')
+            ->expects($this->once())
+            ->method('getService')
             ->with('bar')
             ->willReturn(new stdClass());
 
@@ -28,19 +32,21 @@ class AliasResolverTest extends TestCase
          */
         $resolver = new AliasResolver();
         $service = $resolver
-            ->register('foo', 'bar')
-            ->get('foo', $serviceLocator);
+            ->addAlias('foo', 'bar')
+            ->getService('foo', $serviceLocator);
 
-        static::assertInstanceOf(stdClass::class, $service);
+        $this->assertInstanceOf(stdClass::class, $service);
     }
 
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::unregister()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::has()
+     * Has.
+     *
+     * Test that resolver can check for service existence.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::hasService()
      */
-    public function testCanUnregisterAliasAndNotGetServiceForKey(): void
+    public function testHas(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -48,24 +54,8 @@ class AliasResolverTest extends TestCase
          * @var ServiceLocatorInterface $serviceLocator
          */
         $resolver = new AliasResolver();
-        $service = $resolver
-            ->register('foo', 'bar')
-            ->unregister('foo')
-            ->get('foo', $serviceLocator);
 
-        static::assertNull($service);
-    }
-
-    /**
-     * /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::create()
-     */
-    public function testCanCreateAliasResolver(): void
-    {
-        $resolver = AliasResolver::create([
-            'foo' => 'bar'
-        ]);
-
-        static::assertInstanceOf(AliasResolver::class, $resolver);
+        $this->assertFalse($resolver->hasService('foo'));
+        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 }

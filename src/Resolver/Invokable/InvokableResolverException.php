@@ -5,19 +5,6 @@ namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
 use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
 
-class InvokableResolverException extends ResolverException
+interface InvokableResolverException extends ResolverException
 {
-    /**
-     * Returns an new instance when $invokable is not a existing class.
-     *
-     * @param string $invokable
-     * @return ResolverException
-     */
-    public static function forNonExistingClass(string $invokable): ResolverException
-    {
-        return new static(sprintf(
-            'Invokable MUST be a valid class, got "%s".',
-            $invokable
-        ));
-    }
 }

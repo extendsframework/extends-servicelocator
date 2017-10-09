@@ -10,11 +10,15 @@ use stdClass;
 class InvokableResolverTest extends TestCase
 {
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::has()
+     * Register.
+     *
+     * Test that a invokable can be registered.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::addInvokable()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::hasService()
      */
-    public function testCanRegisterInvokableAndGetServiceForKey(): void
+    public function testRegister(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -23,19 +27,21 @@ class InvokableResolverTest extends TestCase
          */
         $resolver = new InvokableResolver();
         $service = $resolver
-            ->register('foo', stdClass::class)
-            ->get('foo', $serviceLocator);
+            ->addInvokable('foo', stdClass::class)
+            ->getService('foo', $serviceLocator);
 
-        static::assertInstanceOf(stdClass::class, $service);
+        $this->assertInstanceOf(stdClass::class, $service);
     }
 
     /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::register()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::unregister()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::get()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::has()
+     * Has.
+     *
+     * Test that resolver can check for service existence.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::hasService()
      */
-    public function testCanUnregisterInvokableAndNotGetServiceForKey(): void
+    public function testHas(): void
     {
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
@@ -43,40 +49,27 @@ class InvokableResolverTest extends TestCase
          * @var ServiceLocatorInterface $serviceLocator
          */
         $resolver = new InvokableResolver();
-        $service = $resolver
-            ->register('foo', stdClass::class)
-            ->unregister('foo')
-            ->get('foo', $serviceLocator);
 
-        static::assertNull($service);
+        $this->assertFalse($resolver->hasService('foo'));
+        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 
     /**
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolverException::forNonExistingClass()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolverException
-     * @expectedExceptionMessage Invokable MUST be a valid class, got "bar".
+     * Non existing class.
+     *
+     * Test that a non existing class can no be registered.
+     *
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::addInvokable()
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass::__construct()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass
+     * @expectedExceptionMessage Invokable "bar" must be a existing class.
      */
-    public function testCanNotRegisterUnknownFactoryString(): void
+    public function testNonExistingClass(): void
     {
         /**
          * @var ServiceLocatorInterface $serviceLocator
          */
         $resolver = new InvokableResolver();
-        $resolver->register('foo', 'bar');
-    }
-
-
-    /**
-     * /**
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::create()
-     */
-    public function testCanCreateInvokableResolver(): void
-    {
-        $resolver = InvokableResolver::create([
-            'foo' => stdClass::class
-        ]);
-
-        static::assertInstanceOf(InvokableResolver::class, $resolver);
+        $resolver->addInvokable('foo', 'bar');
     }
 }

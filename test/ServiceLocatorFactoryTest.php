@@ -15,13 +15,17 @@ use stdClass;
 class ServiceLocatorFactoryTest extends TestCase
 {
     /**
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::create()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::createResolver()
+     * Create.
+     *
+     * Test that a ServiceLocatorInterface will be created from a config.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::createService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::getResolver()
      */
-    public function testCanCreateServiceLocatorForResolvers(): void
+    public function testCreate(): void
     {
         $factory = new ServiceLocatorFactory();
-        $serviceLocator = $factory->create([
+        $serviceLocator = $factory->createService([
             AliasResolver::class => [
                 'foo' => 'bar'
             ],
@@ -30,7 +34,7 @@ class ServiceLocatorFactoryTest extends TestCase
                 }
             ],
             FactoryResolver::class => [
-                'foo' => $this->createMock(ServiceFactoryInterface::class)
+                'foo' => FactoryStub::class
             ],
             InvokableResolver::class => [
                 'foo' => stdClass::class
@@ -40,21 +44,35 @@ class ServiceLocatorFactoryTest extends TestCase
             ]
         ]);
 
-        static::assertInstanceOf(ServiceLocatorInterface::class, $serviceLocator);
+        $this->assertInstanceOf(ServiceLocatorInterface::class, $serviceLocator);
     }
 
     /**
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::create()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::createResolver()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorException::forInvalidResolverType()
-     * @expectedException        \ExtendsFramework\ServiceLocator\ServiceLocatorException
-     * @expectedExceptionMessage Resolver MUST be instance or subclass of ResolverInterface, got "A".
+     * Unknown resolver.
+     *
+     * Test that a unknown resolver can not be found.
+     *
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::createService()
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::getResolver()
+     * @covers                   \ExtendsFramework\ServiceLocator\Exception\UnknownResolverType::__construct()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Exception\UnknownResolverType
+     * @expectedExceptionMessage Resolver must be instance or subclass of ResolverInterface, got "A".
      */
-    public function testCanNotCreateWithUnknownResolver(): void
+    public function testUnknownResolver(): void
     {
         $factory = new ServiceLocatorFactory();
-        $factory->create([
+        $factory->createService([
             'A' => []
         ]);
+    }
+}
+
+class FactoryStub implements ServiceFactoryInterface
+{
+    /**
+     * @inheritDoc
+     */
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator)
+    {
     }
 }

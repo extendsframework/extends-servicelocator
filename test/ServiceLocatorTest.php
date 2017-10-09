@@ -10,24 +10,28 @@ use stdClass;
 class ServiceLocatorTest extends TestCase
 {
     /**
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::register()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::get()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::has()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::service()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::resolver()
+     * Register.
+     *
+     * Test that a resolver can be registered.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      */
-    public function testCanRegisterResolverAndGetServiceForKey(): void
+    public function testRegister(): void
     {
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver
-            ->expects(static::once())
-            ->method('get')
+            ->expects($this->once())
+            ->method('getService')
             ->with('A')
             ->willReturn(new stdClass());
 
         $resolver
-            ->expects(static::exactly(2))
-            ->method('has')
+            ->expects($this->exactly(2))
+            ->method('hasService')
             ->with('A')
             ->willReturn(true);
 
@@ -36,31 +40,52 @@ class ServiceLocatorTest extends TestCase
          */
         $serviceLocator = new ServiceLocator();
         $service = $serviceLocator
-            ->register($resolver, 'invokables')
-            ->get('A');
+            ->addResolver($resolver, 'invokables')
+            ->getService('A');
 
-        static::assertInstanceOf(stdClass::class, $service);
+        $this->assertInstanceOf(stdClass::class, $service);
     }
 
     /**
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::register()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::get()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::has()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::service()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::resolver()
+     * Has.
+     *
+     * Test that service locator can check for service existence.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      */
-    public function testCanDirectlyReturnCachedServiceForKey(): void
+    public function testHas(): void
+    {
+        $serviceLocator = new ServiceLocator();
+
+        $this->assertFalse($serviceLocator->hasService('foo'));
+    }
+
+    /**
+     * Cached service.
+     *
+     * Test that a cached service will be returned.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
+     */
+    public function testCachedService(): void
     {
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver
-            ->expects(static::once())
-            ->method('get')
+            ->expects($this->once())
+            ->method('getService')
             ->with('A')
             ->willReturn(new stdClass());
 
         $resolver
-            ->expects(static::exactly(2))
-            ->method('has')
+            ->expects($this->exactly(2))
+            ->method('hasService')
             ->with('A')
             ->willReturn(true);
 
@@ -69,40 +94,32 @@ class ServiceLocatorTest extends TestCase
          */
         $serviceLocator = new ServiceLocator();
         $serviceLocator
-            ->register($resolver, 'invokables')
-            ->get('A');
+            ->addResolver($resolver, 'invokables')
+            ->getService('A');
 
         $service = $serviceLocator
-            ->unregister('invokables')
-            ->get('A');
+            ->addResolver($resolver, 'invokables')
+            ->getService('A');
 
-        static::assertInstanceOf(stdClass::class, $service);
+        $this->assertInstanceOf(stdClass::class, $service);
     }
 
     /**
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::register()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::unregister()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::get()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::has()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::service()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::resolver()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorException::forServiceNotFound()
-     * @expectedException        \ExtendsFramework\ServiceLocator\ServiceLocatorException
-     * @expectedExceptionMessage Service with key "A" MUST exist.
+     * Service not found.
+     *
+     * Test that a service can not be located and an exception will be thrown.
+     *
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
+     * @covers                   \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound::__construct()
+     * @expectedException        \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound
+     * @expectedExceptionMessage No service found for key "foo".
      */
-    public function testCanUnRegisterResolverAndCanNotGetServiceForKey(): void
+    public function testServiceNotFound(): void
     {
-        $resolver = $this->createMock(ResolverInterface::class);
-
-        /**
-         * @var ResolverInterface $resolver
-         */
         $serviceLocator = new ServiceLocator();
-        $service = $serviceLocator
-            ->register($resolver, 'invokables')
-            ->unregister('invokables')
-            ->get('A');
-
-        static::assertInstanceOf(stdClass::class, $service);
+        $serviceLocator->getService('foo');
     }
 }

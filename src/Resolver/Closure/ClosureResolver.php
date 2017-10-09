@@ -19,9 +19,9 @@ class ClosureResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function has(string $key): bool
+    public function hasService(string $key): bool
     {
-        return isset($this->closures[$key]);
+        return array_key_exists($key, $this->closures) === true;
     }
 
     /**
@@ -29,27 +29,13 @@ class ClosureResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function get(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
     {
-        if (!$this->has($key)) {
+        if ($this->hasService($key) === false) {
             return null;
         }
 
         return $this->closures[$key]($key, $serviceLocator);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function create(array $services): ResolverInterface
-    {
-        $resolver = new static;
-
-        foreach ($services as $key => $closure) {
-            $resolver->register($key, $closure);
-        }
-
-        return $resolver;
     }
 
     /**
@@ -59,22 +45,9 @@ class ClosureResolver implements ResolverInterface
      * @param Closure $closure
      * @return ClosureResolver
      */
-    public function register(string $key, Closure $closure): ClosureResolver
+    public function addClosure(string $key, Closure $closure): ClosureResolver
     {
         $this->closures[$key] = $closure;
-
-        return $this;
-    }
-
-    /**
-     * Unregister closure for $key.
-     *
-     * @param string $key
-     * @return ClosureResolver
-     */
-    public function unregister(string $key): ClosureResolver
-    {
-        unset($this->closures[$key]);
 
         return $this;
     }

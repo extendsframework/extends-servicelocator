@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverException;
+use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter;
+use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\ReflectionFailed;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
@@ -18,22 +19,22 @@ class ReflectionResolver implements ResolverInterface
      *
      * @var array
      */
-    protected $classes;
+    protected $classes = [];
 
     /**
      * @inheritDoc
      */
-    public function has(string $key): bool
+    public function hasService(string $key): bool
     {
-        return isset($this->classes[$key]);
+        return array_key_exists($key, $this->classes) === true;
     }
 
     /**
      * @inheritDoc
      */
-    public function get(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
     {
-        if (!$this->has($key)) {
+        if ($this->hasService($key) === false) {
             return null;
         }
 
@@ -44,42 +45,15 @@ class ReflectionResolver implements ResolverInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public static function create(array $services): ResolverInterface
-    {
-        $resolver = new static;
-
-        foreach ($services as $key => $class) {
-            $resolver->register($key, $class);
-        }
-
-        return $resolver;
-    }
-
-    /**
      * Register $class for $key.
      *
      * @param string $key
      * @param string $class
      * @return ReflectionResolver
      */
-    public function register(string $key, string $class): ReflectionResolver
+    public function addReflection(string $key, string $class): ReflectionResolver
     {
         $this->classes[$key] = $class;
-
-        return $this;
-    }
-
-    /**
-     * Unregister class for $key.
-     *
-     * @param string $key
-     * @return ReflectionResolver
-     */
-    public function unregister(string $key): ReflectionResolver
-    {
-        unset($this->classes[$key]);
 
         return $this;
     }
@@ -94,26 +68,27 @@ class ReflectionResolver implements ResolverInterface
      * @param string                  $class
      * @param ServiceLocatorInterface $serviceLocator
      * @return iterable
-     * @throws ResolverException
+     * @throws ReflectionResolverException
      * @throws ServiceLocatorException
      */
     protected function values(string $class, ServiceLocatorInterface $serviceLocator): iterable
     {
         try {
+            new ReflectionClass($class);
             $constructor = (new ReflectionClass($class))->getConstructor();
         } catch (ReflectionException $exception) {
-            throw ReflectionResolverException::forFailedReflection($exception, $class);
+            throw new ReflectionFailed($exception, $class);
         }
 
         $values = [];
-        if ($constructor instanceof ReflectionMethod) {
+        if (($constructor instanceof ReflectionMethod) === true) {
             foreach ($constructor->getParameters() as $parameter) {
                 $reflection = $parameter->getClass();
-                if (!$reflection instanceof ReflectionClass) {
-                    throw ReflectionResolverException::forInvalidParameter($parameter);
+                if (($reflection instanceof ReflectionClass) === false) {
+                    throw new InvalidParameter($parameter);
                 }
 
-                $values[] = $serviceLocator->get($reflection->getName());
+                $values[] = $serviceLocator->getService($reflection->getName());
             }
         }
 
