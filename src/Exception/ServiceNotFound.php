@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace ExtendsFramework\ServiceLocator\Exception;
 
 use Exception;
+use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 
-class ServiceNotFound extends Exception
+class ServiceNotFound extends Exception implements ServiceLocatorException
 {
     /**
      * Service with $key not found.
