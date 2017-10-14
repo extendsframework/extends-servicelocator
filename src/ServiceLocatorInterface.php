@@ -6,14 +6,6 @@ namespace ExtendsFramework\ServiceLocator;
 interface ServiceLocatorInterface
 {
     /**
-     * Check if the service locator has a service with the name $key.
-     *
-     * @param string $key
-     * @return bool
-     */
-    public function hasService(string $key): bool;
-
-    /**
      * Get a service with the name $key.
      *
      * An exception will be thrown when $key is invalid or no service is found for $key.

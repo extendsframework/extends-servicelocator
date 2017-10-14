@@ -25,17 +25,9 @@ class ServiceLocator implements ServiceLocatorInterface
     /**
      * @inheritDoc
      */
-    public function hasService(string $key): bool
-    {
-        return $this->getCachedService($key) !== null || $this->getResolver($key) instanceof ResolverInterface;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getService(string $key)
     {
-        if ($this->hasService($key) === false) {
+        if ($this->getCachedService($key) === null && $this->getResolver($key) === null) {
             throw new ServiceNotFound($key);
         }
 
