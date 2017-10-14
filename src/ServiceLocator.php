@@ -27,13 +27,14 @@ class ServiceLocator implements ServiceLocatorInterface
      */
     public function getService(string $key)
     {
-        if ($this->getCachedService($key) === null && $this->getResolver($key) === null) {
-            throw new ServiceNotFound($key);
-        }
-
         $service = $this->getCachedService($key);
         if ($service === null) {
-            $this->services[$key] = $service = $this->getResolver($key)->getService($key, $this);
+            $resolver = $this->getResolver($key);
+            if ($resolver instanceof ResolverInterface) {
+                $this->services[$key] = $service = $resolver->getService($key, $this);
+            } else {
+                throw new ServiceNotFound($key);
+            }
         }
 
         return $service;
