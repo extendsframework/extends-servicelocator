@@ -16,7 +16,6 @@ class ServiceLocatorTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      */
@@ -30,7 +29,7 @@ class ServiceLocatorTest extends TestCase
             ->willReturn(new stdClass());
 
         $resolver
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('hasService')
             ->with('A')
             ->willReturn(true);
@@ -47,30 +46,12 @@ class ServiceLocatorTest extends TestCase
     }
 
     /**
-     * Has.
-     *
-     * Test that service locator can check for service existence.
-     *
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
-     */
-    public function testHas(): void
-    {
-        $serviceLocator = new ServiceLocator();
-
-        $this->assertFalse($serviceLocator->hasService('foo'));
-    }
-
-    /**
      * Cached service.
      *
      * Test that a cached service will be returned.
      *
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      */
@@ -84,7 +65,7 @@ class ServiceLocatorTest extends TestCase
             ->willReturn(new stdClass());
 
         $resolver
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('hasService')
             ->with('A')
             ->willReturn(true);
@@ -110,7 +91,6 @@ class ServiceLocatorTest extends TestCase
      * Test that a service can not be located and an exception will be thrown.
      *
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::hasService()
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      * @covers                   \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound::__construct()
