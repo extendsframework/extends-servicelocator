@@ -12,8 +12,9 @@ interface ServiceFactoryInterface
      *
      * @param string                  $key
      * @param ServiceLocatorInterface $serviceLocator
+     * @param array|null              $extra
      * @return mixed
-     * @throws $name
+     * @throws FactoryResolverException
      */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator);
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null);
 }

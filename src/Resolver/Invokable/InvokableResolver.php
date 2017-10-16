@@ -27,7 +27,7 @@ class InvokableResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
     {
         if ($this->hasService($key) === false) {
             return null;
@@ -35,7 +35,7 @@ class InvokableResolver implements ResolverInterface
 
         $invokable = $this->invokables[$key];
 
-        return new $invokable();
+        return new $invokable($serviceLocator, $extra);
     }
 
     /**

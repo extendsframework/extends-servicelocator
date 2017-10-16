@@ -16,28 +16,57 @@ class ServiceLocator implements ServiceLocatorInterface
     protected $resolvers = [];
 
     /**
-     * An associative array with all the cached services.
+     * An associative array with all the shared services.
      *
      * @var array
      */
-    protected $services = [];
+    protected $shared = [];
+
+    /**
+     * Service locator config.
+     *
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * ServiceLocator constructor.
+     *
+     * @param array $config
+     */
+    public function __construct(array $config)
+    {
+        $this->config = $config;
+    }
 
     /**
      * @inheritDoc
      */
-    public function getService(string $key)
+    public function getService(string $key, array $extra = null)
     {
-        $service = $this->getCachedService($key);
+        $service = $this->getSharedService($key);
         if ($service === null) {
             $resolver = $this->getResolver($key);
             if ($resolver instanceof ResolverInterface) {
-                $this->services[$key] = $service = $resolver->getService($key, $this);
+                $service = $resolver->getService($key, $this, $extra);
+
+                if ($extra === null) {
+                    $this->shared[$key] = $service;
+                }
             } else {
                 throw new ServiceNotFound($key);
             }
         }
 
         return $service;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
     }
 
     /**
@@ -76,17 +105,17 @@ class ServiceLocator implements ServiceLocatorInterface
     }
 
     /**
-     * Get cached service for $key.
+     * Get shared service for $key.
      *
-     * If no service is cached, null will be returned.
+     * If no service is shared, null will be returned.
      *
      * @param string $key
      * @return mixed
      */
-    protected function getCachedService(string $key)
+    protected function getSharedService(string $key)
     {
-        if (array_key_exists($key, $this->services) === true) {
-            return $this->services[$key];
+        if (array_key_exists($key, $this->shared) === true) {
+            return $this->shared[$key];
         }
 
         return null;

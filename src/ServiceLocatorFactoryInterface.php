@@ -11,9 +11,9 @@ interface ServiceLocatorFactoryInterface
      * When looking for a resolver to create the requested service, the resolvers will be looped sequentially. So, it
      * is recommended to begin with the most used resolver(s) in $resolvers.
      *
-     * @param array $resolvers
+     * @param array $config
      * @return ServiceLocatorInterface
      * @throws ServiceLocatorException
      */
-    public function createService(array $resolvers): ServiceLocatorInterface;
+    public function createService(array $config): ServiceLocatorInterface;
 }

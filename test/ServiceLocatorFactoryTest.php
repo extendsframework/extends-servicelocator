@@ -26,22 +26,24 @@ class ServiceLocatorFactoryTest extends TestCase
     {
         $factory = new ServiceLocatorFactory();
         $serviceLocator = $factory->createService([
-            AliasResolver::class => [
-                'foo' => 'bar'
+            'service_locator' => [
+                AliasResolver::class => [
+                    'foo' => 'bar',
+                ],
+                ClosureResolver::class => [
+                    'foo' => function () {
+                    },
+                ],
+                FactoryResolver::class => [
+                    'foo' => FactoryStub::class,
+                ],
+                InvokableResolver::class => [
+                    'foo' => stdClass::class,
+                ],
+                ReflectionResolver::class => [
+                    'foo' => stdClass::class,
+                ],
             ],
-            ClosureResolver::class => [
-                'foo' => function () {
-                }
-            ],
-            FactoryResolver::class => [
-                'foo' => FactoryStub::class
-            ],
-            InvokableResolver::class => [
-                'foo' => stdClass::class
-            ],
-            ReflectionResolver::class => [
-                'foo' => stdClass::class
-            ]
         ]);
 
         $this->assertInstanceOf(ServiceLocatorInterface::class, $serviceLocator);
@@ -62,7 +64,9 @@ class ServiceLocatorFactoryTest extends TestCase
     {
         $factory = new ServiceLocatorFactory();
         $factory->createService([
-            'A' => []
+            'service_locator' => [
+                'A' => [],
+            ],
         ]);
     }
 }
@@ -72,7 +76,7 @@ class FactoryStub implements ServiceFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator)
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
     {
     }
 }

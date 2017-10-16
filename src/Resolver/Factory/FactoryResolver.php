@@ -31,7 +31,7 @@ class FactoryResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
     {
         if ($this->hasService($key) === false) {
             return null;
@@ -44,7 +44,7 @@ class FactoryResolver implements ResolverInterface
         }
 
         try {
-            return $factory->createService($key, $serviceLocator);
+            return $factory->createService($key, $serviceLocator, $extra);
         } catch (Throwable $exception) {
             throw new ServiceCreateFailed($key, $exception);
         }

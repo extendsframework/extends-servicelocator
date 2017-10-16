@@ -14,9 +14,10 @@ class ServiceLocatorTest extends TestCase
      *
      * Test that a resolver can be registered.
      *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      */
     public function testRegister(): void
@@ -37,7 +38,7 @@ class ServiceLocatorTest extends TestCase
         /**
          * @var ResolverInterface $resolver
          */
-        $serviceLocator = new ServiceLocator();
+        $serviceLocator = new ServiceLocator([]);
         $service = $serviceLocator
             ->addResolver($resolver, 'invokables')
             ->getService('A');
@@ -46,16 +47,17 @@ class ServiceLocatorTest extends TestCase
     }
 
     /**
-     * Cached service.
+     * Shared service.
      *
-     * Test that a cached service will be returned.
+     * Test that a shared service will be returned and cached by the service locator.
      *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      */
-    public function testCachedService(): void
+    public function testSharedService(): void
     {
         $resolver = $this->createMock(ResolverInterface::class);
         $resolver
@@ -73,16 +75,81 @@ class ServiceLocatorTest extends TestCase
         /**
          * @var ResolverInterface $resolver
          */
-        $serviceLocator = new ServiceLocator();
-        $serviceLocator
+        $serviceLocator = new ServiceLocator([]);
+        $service1 = $serviceLocator
             ->addResolver($resolver, 'invokables')
             ->getService('A');
 
-        $service = $serviceLocator
+        $service2 = $serviceLocator
             ->addResolver($resolver, 'invokables')
             ->getService('A');
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        $this->assertSame($service1, $service2);
+    }
+
+    /**
+     * Managed service.
+     *
+     * Test that a managed service will be returned and not cached by the service locator.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
+     */
+    public function testManagedService(): void
+    {
+        $resolver = $this->createMock(ResolverInterface::class);
+        $resolver
+            ->expects($this->exactly(2))
+            ->method('getService')
+            ->with(
+                'A',
+                $this->isInstanceOf(ServiceLocatorInterface::class),
+                ['foo' => 'bar']
+            )
+            ->willReturnOnConsecutiveCalls(
+                new stdClass(),
+                new stdClass()
+            );
+
+        $resolver
+            ->expects($this->exactly(2))
+            ->method('hasService')
+            ->with('A')
+            ->willReturn(true);
+
+        /**
+         * @var ResolverInterface $resolver
+         */
+        $serviceLocator = new ServiceLocator([]);
+        $service1 = $serviceLocator
+            ->addResolver($resolver, 'invokables')
+            ->getService('A', ['foo' => 'bar']);
+
+        $service2 = $serviceLocator
+            ->addResolver($resolver, 'invokables')
+            ->getService('A', ['foo' => 'bar']);
+
+        $this->assertNotSame($service1, $service2);
+    }
+
+    /**
+     * Get config.
+     *
+     * Test that config is returned.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getConfig()
+     */
+    public function testGetConfig()
+    {
+        $serviceLocator = new ServiceLocator([
+            'foo' => 'bar',
+        ]);
+
+        $this->assertSame(['foo' => 'bar'], $serviceLocator->getConfig());
     }
 
     /**
@@ -90,8 +157,9 @@ class ServiceLocatorTest extends TestCase
      *
      * Test that a service can not be located and an exception will be thrown.
      *
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getCachedService()
+     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
      * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
      * @covers                   \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound::__construct()
      * @expectedException        \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound
@@ -99,7 +167,7 @@ class ServiceLocatorTest extends TestCase
      */
     public function testServiceNotFound(): void
     {
-        $serviceLocator = new ServiceLocator();
+        $serviceLocator = new ServiceLocator([]);
         $serviceLocator->getService('foo');
     }
 }

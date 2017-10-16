@@ -16,10 +16,10 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createService(array $resolvers): ServiceLocatorInterface
+    public function createService(array $config): ServiceLocatorInterface
     {
-        $serviceLocator = new ServiceLocator();
-        foreach ($resolvers as $fqcn => $services) {
+        $serviceLocator = new ServiceLocator($config);
+        foreach ($config['service_locator'] ?? [] as $fqcn => $services) {
             $resolver = $this->getResolver($fqcn, $services);
             $serviceLocator->addResolver($resolver, $fqcn);
         }

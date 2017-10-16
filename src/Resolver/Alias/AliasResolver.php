@@ -29,13 +29,13 @@ class AliasResolver implements ResolverInterface
      *
      * @inheritDoc
      */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
     {
         if ($this->hasService($key) === false) {
             return null;
         }
 
-        return $serviceLocator->getService($this->aliases[$key]);
+        return $serviceLocator->getService($this->aliases[$key], $extra);
     }
 
     /**
