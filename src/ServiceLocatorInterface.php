@@ -13,7 +13,7 @@ interface ServiceLocatorInterface
      *
      * @param string $key
      * @param array  $extra
-     * @return mixed
+     * @return object
      * @throws ServiceLocatorException
      */
     public function getService(string $key, array $extra = null);
