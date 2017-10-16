@@ -29,9 +29,12 @@ class FactoryResolverTest extends TestCase
         $resolver = new FactoryResolver();
         $service = $resolver
             ->addFactory('foo', FactoryStub::class)
-            ->getService('foo', $serviceLocator);
+            ->getService('foo', $serviceLocator, ['foo' => 'bar']);
 
         $this->assertInstanceOf(stdClass::class, $service);
+        $this->assertSame('foo', $service->key);
+        $this->assertSame($serviceLocator, $service->serviceLocator);
+        $this->assertSame(['foo' => 'bar'], $service->extra);
     }
 
     /**
@@ -103,7 +106,12 @@ class FactoryStub implements ServiceFactoryInterface
      */
     public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
     {
-        return new stdClass();
+        $service = new stdClass();
+        $service->key = $key;
+        $service->serviceLocator = $serviceLocator;
+        $service->extra = $extra;
+
+        return $service;
     }
 }
 

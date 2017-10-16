@@ -24,7 +24,7 @@ class AliasResolverTest extends TestCase
         $serviceLocator
             ->expects($this->once())
             ->method('getService')
-            ->with('bar')
+            ->with('bar', ['foo' => 'bar'])
             ->willReturn(new stdClass());
 
         /**
@@ -33,7 +33,7 @@ class AliasResolverTest extends TestCase
         $resolver = new AliasResolver();
         $service = $resolver
             ->addAlias('foo', 'bar')
-            ->getService('foo', $serviceLocator);
+            ->getService('foo', $serviceLocator, ['foo' => 'bar']);
 
         $this->assertInstanceOf(stdClass::class, $service);
     }

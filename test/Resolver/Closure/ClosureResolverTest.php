@@ -27,12 +27,20 @@ class ClosureResolverTest extends TestCase
          */
         $resolver = new ClosureResolver();
         $service = $resolver
-            ->addClosure('foo', function () {
-                return new stdClass();
+            ->addClosure('foo', function (string $key, ServiceLocatorInterface $serviceLocator, array $extra = null) {
+                $service = new stdClass();
+                $service->key = $key;
+                $service->serviceLocator = $serviceLocator;
+                $service->extra = $extra;
+
+                return $service;
             })
-            ->getService('foo', $serviceLocator);
+            ->getService('foo', $serviceLocator, ['foo' => 'bar']);
 
         $this->assertInstanceOf(stdClass::class, $service);
+        $this->assertSame('foo', $service->key);
+        $this->assertSame($serviceLocator, $service->serviceLocator);
+        $this->assertSame(['foo' => 'bar'], $service->extra);
     }
 
     /**

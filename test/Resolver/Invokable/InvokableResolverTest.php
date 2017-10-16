@@ -5,7 +5,6 @@ namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class InvokableResolverTest extends TestCase
 {
@@ -27,10 +26,10 @@ class InvokableResolverTest extends TestCase
          */
         $resolver = new InvokableResolver();
         $service = $resolver
-            ->addInvokable('foo', stdClass::class)
-            ->getService('foo', $serviceLocator);
+            ->addInvokable('foo', InvokableSub::class)
+            ->getService('foo', $serviceLocator, ['foo' => 'bar']);
 
-        $this->assertInstanceOf(stdClass::class, $service);
+        $this->assertInstanceOf(InvokableSub::class, $service);
     }
 
     /**
@@ -71,5 +70,19 @@ class InvokableResolverTest extends TestCase
          */
         $resolver = new InvokableResolver();
         $resolver->addInvokable('foo', 'bar');
+    }
+}
+
+class InvokableSub
+{
+    /**
+     * InvokableSub constructor.
+     *
+     * @param string                  $key
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param array|null              $extra
+     */
+    public function __construct(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
+    {
     }
 }
