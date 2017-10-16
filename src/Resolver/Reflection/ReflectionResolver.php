@@ -45,6 +45,19 @@ class ReflectionResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static();
+        foreach ($services as $key => $class) {
+            $resolver->addReflection($key, $class);
+        }
+
+        return $resolver;
+    }
+
+    /**
      * Register $class for $key.
      *
      * @param string $key

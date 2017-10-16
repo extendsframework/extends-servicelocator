@@ -39,6 +39,19 @@ class AliasResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static();
+        foreach ($services as $key => $alias) {
+            $resolver->addAlias($key, $alias);
+        }
+
+        return $resolver;
+    }
+
+    /**
      * Register $alias for $key.
      *
      * @param string $key

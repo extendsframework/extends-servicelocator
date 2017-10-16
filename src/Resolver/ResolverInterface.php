@@ -27,4 +27,12 @@ interface ResolverInterface
      * @return object
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null);
+
+    /**
+     * Create new resolver from $config.
+     *
+     * @param array $services
+     * @return ResolverInterface
+     */
+    public static function create(array $services): ResolverInterface;
 }

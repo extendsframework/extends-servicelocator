@@ -39,6 +39,19 @@ class InvokableResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static();
+        foreach ($services as $key => $invokable) {
+            $resolver->addInvokable($key, $invokable);
+        }
+
+        return $resolver;
+    }
+
+    /**
      * Register $invokable for $key.
      *
      * An exception will be thrown when $invokable is not a existing class.

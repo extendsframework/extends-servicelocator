@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
+use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -105,6 +106,22 @@ class ReflectionResolverTest extends TestCase
         $resolver
             ->addReflection(ClassC::class, ClassC::class)
             ->getService(ClassC::class, $serviceLocator);
+    }
+
+    /**
+     * Create.
+     *
+     * Test that static factory will return resolver interface.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::create()
+     */
+    public function testCreate(): void
+    {
+        $resolver = ReflectionResolver::create([
+            'A' => ClassA::class,
+        ]);
+
+        $this->assertInstanceOf(ResolverInterface::class, $resolver);
     }
 }
 

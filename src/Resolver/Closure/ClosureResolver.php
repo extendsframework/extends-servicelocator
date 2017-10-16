@@ -39,6 +39,19 @@ class ClosureResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static();
+        foreach ($services as $key => $closure) {
+            $resolver->addClosure($key, $closure);
+        }
+
+        return $resolver;
+    }
+
+    /**
      * Register $closure for $key.
      *
      * @param string  $key
@@ -51,4 +64,6 @@ class ClosureResolver implements ResolverInterface
 
         return $this;
     }
+
+
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
+use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -70,6 +71,22 @@ class InvokableResolverTest extends TestCase
          */
         $resolver = new InvokableResolver();
         $resolver->addInvokable('foo', 'bar');
+    }
+
+    /**
+     * Create.
+     *
+     * Test that static factory will return resolver interface.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::create()
+     */
+    public function testCreate(): void
+    {
+        $resolver = InvokableResolver::create([
+            'A' => InvokableSub::class,
+        ]);
+
+        $this->assertInstanceOf(ResolverInterface::class, $resolver);
     }
 }
 

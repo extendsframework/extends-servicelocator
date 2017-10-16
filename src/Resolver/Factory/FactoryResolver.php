@@ -51,6 +51,19 @@ class FactoryResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function create(array $services): ResolverInterface
+    {
+        $resolver = new static();
+        foreach ($services as $key => $factory) {
+            $resolver->addFactory($key, $factory);
+        }
+
+        return $resolver;
+    }
+
+    /**
      * Register $factory for $key.
      *
      * An exception will be thrown when $factory is not an subclass of ServiceFactoryInterface.

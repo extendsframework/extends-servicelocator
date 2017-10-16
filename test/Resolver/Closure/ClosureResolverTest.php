@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Closure;
 
+use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -62,5 +63,22 @@ class ClosureResolverTest extends TestCase
 
         $this->assertFalse($resolver->hasService('foo'));
         $this->assertNull($resolver->getService('foo', $serviceLocator));
+    }
+
+    /**
+     * Create.
+     *
+     * Test that static factory will return resolver interface.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::create()
+     */
+    public function testCreate(): void
+    {
+        $resolver = ClosureResolver::create([
+            'A' => function () {
+            },
+        ]);
+
+        $this->assertInstanceOf(ResolverInterface::class, $resolver);
     }
 }

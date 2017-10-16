@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Alias;
 
+use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -57,5 +58,21 @@ class AliasResolverTest extends TestCase
 
         $this->assertFalse($resolver->hasService('foo'));
         $this->assertNull($resolver->getService('foo', $serviceLocator));
+    }
+
+    /**
+     * Create.
+     *
+     * Test that static factory will return resolver interface.
+     *
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::create()
+     */
+    public function testCreate(): void
+    {
+        $resolver = AliasResolver::create([
+            'A' => 'B',
+        ]);
+
+        $this->assertInstanceOf(ResolverInterface::class, $resolver);
     }
 }
