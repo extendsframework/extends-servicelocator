@@ -14,7 +14,7 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
     public function createService(array $config): ServiceLocatorInterface
     {
         $serviceLocator = new ServiceLocator($config);
-        foreach ($config['service_locator'] ?? [] as $fqcn => $services) {
+        foreach ($config[ServiceLocatorInterface::class] ?? [] as $fqcn => $services) {
             $serviceLocator->addResolver(
                 $this->getResolver($fqcn, $services),
                 $fqcn
