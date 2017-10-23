@@ -15,8 +15,10 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
     {
         $serviceLocator = new ServiceLocator($config);
         foreach ($config['service_locator'] ?? [] as $fqcn => $services) {
-            $resolver = $this->getResolver($fqcn, $services);
-            $serviceLocator->addResolver($resolver, $fqcn);
+            $serviceLocator->addResolver(
+                $this->getResolver($fqcn, $services),
+                $fqcn
+            );
         }
 
         return $serviceLocator;
