@@ -24,7 +24,7 @@ interface ResolverInterface
      * @param array|null              $extra
      * @throws ResolverException
      * @throws ServiceLocatorException
-     * @return object
+     * @return mixed
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null);
 
