@@ -70,11 +70,11 @@ class ClosureResolverTest extends TestCase
      *
      * Test that static factory will return resolver interface.
      *
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::create()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::factory()
      */
     public function testCreate(): void
     {
-        $resolver = ClosureResolver::create([
+        $resolver = ClosureResolver::factory([
             'A' => function () {
             },
         ]);

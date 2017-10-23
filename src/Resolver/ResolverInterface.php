@@ -34,5 +34,5 @@ interface ResolverInterface
      * @param array $services
      * @return ResolverInterface
      */
-    public static function create(array $services): ResolverInterface;
+    public static function factory(array $services): ResolverInterface;
 }

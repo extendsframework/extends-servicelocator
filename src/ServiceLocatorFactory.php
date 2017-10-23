@@ -38,6 +38,6 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
             throw new UnknownResolverType($fqcn);
         }
 
-        return $fqcn::create($services);
+        return $fqcn::factory($services);
     }
 }

@@ -41,7 +41,7 @@ class AliasResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public static function create(array $services): ResolverInterface
+    public static function factory(array $services): ResolverInterface
     {
         $resolver = new static();
         foreach ($services as $key => $alias) {

@@ -104,11 +104,11 @@ class FactoryResolverTest extends TestCase
      *
      * Test that static factory will return resolver interface.
      *
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::create()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::factory()
      */
     public function testCreate(): void
     {
-        $resolver = FactoryResolver::create([
+        $resolver = FactoryResolver::factory([
             'A' => FactoryStub::class,
         ]);
 
@@ -139,6 +139,8 @@ class FailedFactory implements ServiceFactoryInterface
      */
     public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
     {
-        throw new RuntimeException('Connection failed.');
+        throw new class extends RuntimeException implements ServiceFactoryException
+        {
+        };
     }
 }

@@ -113,11 +113,11 @@ class ReflectionResolverTest extends TestCase
      *
      * Test that static factory will return resolver interface.
      *
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::create()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::factory()
      */
     public function testCreate(): void
     {
-        $resolver = ReflectionResolver::create([
+        $resolver = ReflectionResolver::factory([
             'A' => ClassA::class,
         ]);
 

@@ -78,11 +78,11 @@ class InvokableResolverTest extends TestCase
      *
      * Test that static factory will return resolver interface.
      *
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::create()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::factory()
      */
     public function testCreate(): void
     {
-        $resolver = InvokableResolver::create([
+        $resolver = InvokableResolver::factory([
             'A' => InvokableSub::class,
         ]);
 

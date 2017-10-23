@@ -65,11 +65,11 @@ class AliasResolverTest extends TestCase
      *
      * Test that static factory will return resolver interface.
      *
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::create()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::factory()
      */
     public function testCreate(): void
     {
-        $resolver = AliasResolver::create([
+        $resolver = AliasResolver::factory([
             'A' => 'B',
         ]);
 
