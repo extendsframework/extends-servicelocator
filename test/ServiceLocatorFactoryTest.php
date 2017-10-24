@@ -28,22 +28,22 @@ class ServiceLocatorFactoryTest extends TestCase
         $serviceLocator = $factory->createService([
             'service_locator' => [
                 AliasResolver::class => [
-                    'foo' => 'bar',
+                    'foo' => 'bar'
                 ],
                 ClosureResolver::class => [
                     'foo' => function () {
-                    },
+                    }
                 ],
                 FactoryResolver::class => [
-                    'foo' => FactoryStub::class,
+                    'foo' => FactoryStub::class
                 ],
                 InvokableResolver::class => [
-                    'foo' => stdClass::class,
+                    'foo' => stdClass::class
                 ],
                 ReflectionResolver::class => [
-                    'foo' => stdClass::class,
-                ],
-            ],
+                    'foo' => stdClass::class
+                ]
+            ]
         ]);
 
         $this->assertInstanceOf(ServiceLocatorInterface::class, $serviceLocator);
@@ -64,9 +64,9 @@ class ServiceLocatorFactoryTest extends TestCase
     {
         $factory = new ServiceLocatorFactory();
         $factory->createService([
-            'service_locator' => [
-                'A' => [],
-            ],
+            ServiceLocatorInterface::class => [
+                'A' => []
+            ]
         ]);
     }
 }
