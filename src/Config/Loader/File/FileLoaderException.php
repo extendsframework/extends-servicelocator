@@ -7,5 +7,4 @@ use ExtendsFramework\ServiceLocator\Config\Loader\LoaderException;
 
 interface FileLoaderException extends LoaderException
 {
-
 }
