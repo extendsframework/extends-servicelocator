@@ -13,6 +13,7 @@ class FileLoaderTest extends TestCase
      * Test that added path will be loaded and array is returned.
      *
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\File\FileLoader::__construct()
+     * @covers \ExtendsFramework\ServiceLocator\Config\Loader\File\FileLoader::addPath()
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\File\FileLoader::load()
      */
     public function testLoad(): void

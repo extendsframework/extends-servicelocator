@@ -8,20 +8,22 @@ use ExtendsFramework\ServiceLocator\Config\Loader\LoaderInterface;
 class FileLoader implements LoaderInterface
 {
     /**
-     * Glob pattern.
+     * Paths for glob() to locate configs.
      *
-     * @var string
+     * @var string[]
      */
-    protected $pattern;
+    protected $paths = [];
 
     /**
      * GlobLoader constructor.
      *
-     * @param string $pattern
+     * @param string[] ...$paths
      */
-    public function __construct($pattern)
+    public function __construct(string ...$paths)
     {
-        $this->pattern = $pattern;
+        foreach ($paths as $path) {
+            $this->addPath($path);
+        }
     }
 
     /**
@@ -30,10 +32,25 @@ class FileLoader implements LoaderInterface
     public function load(): array
     {
         $loaded = [];
-        foreach (glob($this->pattern, GLOB_BRACE) as $file) {
-            $loaded[] = require $file;
+        foreach ($this->paths as $path) {
+            foreach (glob($path, GLOB_BRACE) as $file) {
+                $loaded[] = require $file;
+            }
         }
 
         return $loaded;
+    }
+
+    /**
+     * Add glob $path.
+     *
+     * @param string $path
+     * @return FileLoader
+     */
+    public function addPath(string $path): FileLoader
+    {
+        $this->paths[] = $path;
+
+        return $this;
     }
 }
