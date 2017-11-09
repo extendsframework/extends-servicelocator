@@ -127,7 +127,7 @@ class ReflectionResolverTest extends TestCase
 
 class ClassA
 {
-    public function __construct(ClassB $b)
+    public function __construct(ClassB $b, ServiceLocatorInterface $serviceLocator)
     {
     }
 }

@@ -101,7 +101,12 @@ class ReflectionResolver implements ResolverInterface
                     throw new InvalidParameter($parameter);
                 }
 
-                $values[] = $serviceLocator->getService($reflection->getName());
+                $name = $reflection->getName();
+                if ($name === ServiceLocatorInterface::class) {
+                    $values[] = $serviceLocator;
+                } else {
+                    $values[] = $serviceLocator->getService($reflection->getName());
+                }
             }
         }
 
