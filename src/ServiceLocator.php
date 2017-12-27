@@ -91,7 +91,7 @@ class ServiceLocator implements ServiceLocatorInterface
      * All resolvers will be checked if it can resolve service for $key. First resolver which can will be returned.
      *
      * @param string $key
-     * @return ResolverInterface
+     * @return null|ResolverInterface
      */
     protected function getResolver(string $key): ?ResolverInterface
     {
@@ -110,9 +110,9 @@ class ServiceLocator implements ServiceLocatorInterface
      * If no service is shared, null will be returned.
      *
      * @param string $key
-     * @return mixed
+     * @return null|object
      */
-    protected function getSharedService(string $key)
+    protected function getSharedService(string $key): ?object
     {
         if (array_key_exists($key, $this->shared) === true) {
             return $this->shared[$key];
