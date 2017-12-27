@@ -55,32 +55,6 @@ class ReflectionResolverTest extends TestCase
     }
 
     /**
-     * Reflection failed.
-     *
-     * Test that reflection will fail for non existing class.
-     *
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::addReflection()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::values()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\ReflectionFailed::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\ReflectionFailed
-     * @expectedExceptionMessage Failed to reflect class "A", got exception "Class A does not exist".
-     */
-    public function testReflectionFailed(): void
-    {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         */
-        $resolver = new ReflectionResolver();
-        $resolver
-            ->addReflection(ClassC::class, 'A')
-            ->getService(ClassC::class, $serviceLocator);
-    }
-
-    /**
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::addReflection()
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
