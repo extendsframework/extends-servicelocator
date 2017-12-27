@@ -2,5 +2,4 @@
 vendor/
 phpcs.xml
 phpunit.xml
-clover.xml
 composer.lock
