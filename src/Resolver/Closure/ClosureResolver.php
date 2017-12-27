@@ -60,6 +60,4 @@ class ClosureResolver implements ResolverInterface
 
         return $this;
     }
-
-
 }
