@@ -115,7 +115,7 @@ class FactoryStub implements ServiceFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
         $service = new stdClass();
         $service->key = $key;
@@ -131,7 +131,7 @@ class FailedFactory implements ServiceFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
         throw new class extends RuntimeException implements ServiceFactoryException
         {

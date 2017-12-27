@@ -122,7 +122,7 @@ class StaticFactoryStub implements StaticFactoryInterface
     /**
      * @inheritDoc
      */
-    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): stdClass
+    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
         $service = new stdClass();
         $service->key = $key;
@@ -138,7 +138,7 @@ class StaticFailedFactoryStub implements StaticFactoryInterface
     /**
      * @inheritDoc
      */
-    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
+    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
         throw new class extends RuntimeException implements StaticFactoryResolverException
         {

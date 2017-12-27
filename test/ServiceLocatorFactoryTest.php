@@ -76,7 +76,7 @@ class FactoryStub implements ServiceFactoryInterface
     /**
      * @inheritDoc
      */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
+    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
     }
 }

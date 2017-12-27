@@ -13,8 +13,8 @@ interface StaticFactoryInterface
      * @param string                  $key
      * @param ServiceLocatorInterface $serviceLocator
      * @param array|null              $extra
-     * @return mixed
+     * @return object
      * @throws StaticFactoryResolverException
      */
-    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null);
+    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object;
 }
