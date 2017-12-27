@@ -4,12 +4,10 @@ declare(strict_types=1);
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
 use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter;
-use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\ReflectionFailed;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionMethod;
 
 class ReflectionResolver implements ResolverInterface
@@ -82,12 +80,7 @@ class ReflectionResolver implements ResolverInterface
      */
     protected function values(string $class, ServiceLocatorInterface $serviceLocator): iterable
     {
-        try {
-            new ReflectionClass($class);
-            $constructor = (new ReflectionClass($class))->getConstructor();
-        } catch (ReflectionException $exception) {
-            throw new ReflectionFailed($exception, $class);
-        }
+        $constructor = (new ReflectionClass($class))->getConstructor();
 
         $values = [];
         if (($constructor instanceof ReflectionMethod) === true) {
