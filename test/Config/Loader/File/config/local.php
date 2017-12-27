@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 return [
     'local' => [
-        'qux' => 'qux'
+        'qux' => 'qux',
     ],
     'global' => [
-        'foo' => 'bar'
-    ]
+        'foo' => 'bar',
+    ],
 ];

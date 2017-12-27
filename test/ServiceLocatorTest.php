@@ -153,43 +153,6 @@ class ServiceLocatorTest extends TestCase
     }
 
     /**
-     * Non object.
-     *
-     * Test that a non object service is not allowed and will throw an exception.
-     *
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
-     * @covers                   \ExtendsFramework\ServiceLocator\Exception\NonObjectService::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Exception\NonObjectService
-     * @expectedExceptionMessage Service for key "A" must an object, got type "array".
-     */
-    public function testNonObject(): void
-    {
-        $resolver = $this->createMock(ResolverInterface::class);
-        $resolver
-            ->expects($this->once())
-            ->method('getService')
-            ->with('A')
-            ->willReturn([]);
-
-        $resolver
-            ->expects($this->once())
-            ->method('hasService')
-            ->with('A')
-            ->willReturn(true);
-
-        /**
-         * @var ResolverInterface $resolver
-         */
-        $serviceLocator = new ServiceLocator([]);
-        $serviceLocator
-            ->addResolver($resolver, 'invokables')
-            ->getService('A');
-    }
-
-    /**
      * Service not found.
      *
      * Test that a service can not be located and an exception will be thrown.

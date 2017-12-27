@@ -24,17 +24,17 @@ class FileLoaderTest extends TestCase
         $this->assertSame([
             [
                 'global' => [
-                    'baz' => 'baz'
-                ]
+                    'baz' => 'baz',
+                ],
             ],
             [
                 'local' => [
-                    'qux' => 'qux'
+                    'qux' => 'qux',
                 ],
                 'global' => [
-                    'foo' => 'bar'
-                ]
-            ]
+                    'foo' => 'bar',
+                ],
+            ],
         ], $loaded);
     }
 }

@@ -52,17 +52,11 @@ class ClosureResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::hasService()
      */
-    public function testHas(): void
+    public function testHasService(): void
     {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         */
         $resolver = new ClosureResolver();
 
         $this->assertFalse($resolver->hasService('foo'));
-        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 
     /**

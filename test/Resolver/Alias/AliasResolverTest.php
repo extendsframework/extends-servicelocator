@@ -47,17 +47,11 @@ class AliasResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::hasService()
      */
-    public function testHas(): void
+    public function testHasService(): void
     {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         */
         $resolver = new AliasResolver();
 
         $this->assertFalse($resolver->hasService('foo'));
-        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 
     /**

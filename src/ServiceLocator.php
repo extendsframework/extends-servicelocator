@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
-use ExtendsFramework\ServiceLocator\Exception\NonObjectService;
 use ExtendsFramework\ServiceLocator\Exception\ServiceNotFound;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 
@@ -43,16 +42,13 @@ class ServiceLocator implements ServiceLocatorInterface
     /**
      * @inheritDoc
      */
-    public function getService(string $key, array $extra = null)
+    public function getService(string $key, array $extra = null): object
     {
         $service = $this->getSharedService($key);
         if ($service === null) {
             $resolver = $this->getResolver($key);
             if ($resolver instanceof ResolverInterface) {
                 $service = $resolver->getService($key, $this, $extra);
-                if (is_object($service) === false) {
-                    throw new NonObjectService($key, $service);
-                }
 
                 if ($extra === null) {
                     $this->shared[$key] = $service;

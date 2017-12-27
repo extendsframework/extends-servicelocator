@@ -21,8 +21,8 @@ class CacheLoaderTest extends TestCase
 
         $this->assertSame([
             'global' => [
-                'baz' => 'baz'
-            ]
+                'baz' => 'baz',
+            ],
         ], $loader->load());
     }
 

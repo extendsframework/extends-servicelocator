@@ -46,17 +46,11 @@ class FactoryResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::hasService()
      */
-    public function testHas(): void
+    public function testHasService(): void
     {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         */
         $resolver = new FactoryResolver();
 
         $this->assertFalse($resolver->hasService('foo'));
-        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 
     /**

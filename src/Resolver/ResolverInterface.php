@@ -22,11 +22,11 @@ interface ResolverInterface
      * @param string                  $key
      * @param ServiceLocatorInterface $serviceLocator
      * @param array|null              $extra
+     * @return object
      * @throws ResolverException
      * @throws ServiceLocatorException
-     * @return mixed
      */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null);
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object;
 
     /**
      * Create new resolver from $config.

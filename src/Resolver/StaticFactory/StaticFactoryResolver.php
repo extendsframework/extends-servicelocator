@@ -29,12 +29,8 @@ class StaticFactoryResolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        if ($this->hasService($key) === false) {
-            return null;
-        }
-
         $service = $this->factories[$key];
 
         try {

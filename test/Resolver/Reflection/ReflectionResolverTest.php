@@ -47,17 +47,11 @@ class ReflectionResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
      */
-    public function testHas(): void
+    public function testHasService(): void
     {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         */
         $resolver = new ReflectionResolver();
 
         $this->assertFalse($resolver->hasService('foo'));
-        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 
     /**

@@ -31,7 +31,7 @@ class StaticFactoryResolverTest extends TestCase
         $service = $resolver
             ->addStaticFactory(StaticFactoryStub::class, StaticFactoryStub::class)
             ->getService(StaticFactoryStub::class, $serviceLocator, [
-                'foo' => 'bar'
+                'foo' => 'bar',
             ]);
 
         $this->assertInstanceOf(stdClass::class, $service);
@@ -51,17 +51,11 @@ class StaticFactoryResolverTest extends TestCase
      */
     public function testHasService(): void
     {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         */
         $resolver = new StaticFactoryResolver();
         $resolver->addStaticFactory(StaticFactoryStub::class, StaticFactoryStub::class);
 
         $this->assertTrue($resolver->hasService(StaticFactoryStub::class));
         $this->assertFalse($resolver->hasService(stdClass::class));
-        $this->assertNull($resolver->getService(stdClass::class, $serviceLocator, []));
     }
 
     /**
@@ -75,7 +69,7 @@ class StaticFactoryResolverTest extends TestCase
     public function testCreate(): void
     {
         $resolver = StaticFactoryResolver::factory([
-            StaticFactoryStub::class => StaticFactoryStub::class
+            StaticFactoryStub::class => StaticFactoryStub::class,
         ]);
 
         $this->assertInstanceOf(ResolverInterface::class, $resolver);

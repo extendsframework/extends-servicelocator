@@ -41,17 +41,11 @@ class InvokableResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::hasService()
      */
-    public function testHas(): void
+    public function testHasService(): void
     {
-        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
-
-        /**
-         * @var ServiceLocatorInterface $serviceLocator
-         */
         $resolver = new InvokableResolver();
 
         $this->assertFalse($resolver->hasService('foo'));
-        $this->assertNull($resolver->getService('foo', $serviceLocator));
     }
 
     /**
