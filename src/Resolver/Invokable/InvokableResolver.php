@@ -21,7 +21,7 @@ class InvokableResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->invokables) === true;
+        return array_key_exists($key, $this->getInvokables()) === true;
     }
 
     /**
@@ -29,7 +29,7 @@ class InvokableResolver implements ResolverInterface
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        $invokable = $this->invokables[$key];
+        $invokable = $this->getInvokables()[$key];
 
         return new $invokable($key, $serviceLocator, $extra);
     }
@@ -66,5 +66,15 @@ class InvokableResolver implements ResolverInterface
         $this->invokables[$key] = (string)$invokable;
 
         return $this;
+    }
+
+    /**
+     * Get invokables.
+     *
+     * @return array
+     */
+    protected function getInvokables(): array
+    {
+        return $this->invokables;
     }
 }

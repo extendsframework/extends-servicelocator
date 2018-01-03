@@ -14,6 +14,7 @@ class CacheLoaderTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::__construct()
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::load()
+     * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::getFilename()
      */
     public function testLoad(): void
     {
@@ -33,6 +34,7 @@ class CacheLoaderTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::__construct()
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::load()
+     * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::getFilename()
      */
     public function testLoadNotCached(): void
     {
@@ -49,6 +51,7 @@ class CacheLoaderTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::__construct()
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::load()
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::save()
+     * @covers \ExtendsFramework\ServiceLocator\Config\Loader\Cache\CacheLoader::getFilename()
      */
     public function testSave(): void
     {

@@ -18,6 +18,7 @@ class AliasResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::addAlias()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::getAliases()
      */
     public function testRegister(): void
     {
@@ -46,6 +47,7 @@ class AliasResolverTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver::getAliases()
      */
     public function testHasService(): void
     {

@@ -21,7 +21,7 @@ class ClosureResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->closures) === true;
+        return array_key_exists($key, $this->getClosures()) === true;
     }
 
     /**
@@ -31,7 +31,7 @@ class ClosureResolver implements ResolverInterface
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        return $this->closures[$key]($key, $serviceLocator, $extra);
+        return $this->getClosures()[$key]($key, $serviceLocator, $extra);
     }
 
     /**
@@ -59,5 +59,15 @@ class ClosureResolver implements ResolverInterface
         $this->closures[$key] = $closure;
 
         return $this;
+    }
+
+    /**
+     * Get closures.
+     *
+     * @return array
+     */
+    protected function getClosures(): array
+    {
+        return $this->closures;
     }
 }

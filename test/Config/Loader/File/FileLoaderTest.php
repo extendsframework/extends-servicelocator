@@ -15,6 +15,7 @@ class FileLoaderTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\File\FileLoader::__construct()
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\File\FileLoader::addPath()
      * @covers \ExtendsFramework\ServiceLocator\Config\Loader\File\FileLoader::load()
+     * @covers \ExtendsFramework\ServiceLocator\Config\Loader\File\FileLoader::getPaths()
      */
     public function testLoad(): void
     {

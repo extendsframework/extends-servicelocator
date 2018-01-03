@@ -24,7 +24,7 @@ class ReflectionResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->classes) === true;
+        return array_key_exists($key, $this->getClasses()) === true;
     }
 
     /**
@@ -32,7 +32,7 @@ class ReflectionResolver implements ResolverInterface
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        $class = $this->classes[$key];
+        $class = $this->getClasses()[$key];
         $values = $this->values($class, $serviceLocator);
 
         return new $class(...$values);
@@ -100,5 +100,15 @@ class ReflectionResolver implements ResolverInterface
         }
 
         return $values;
+    }
+
+    /**
+     * Get classes.
+     *
+     * @return array
+     */
+    protected function getClasses(): array
+    {
+        return $this->classes;
     }
 }

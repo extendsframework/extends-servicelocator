@@ -29,8 +29,9 @@ class CacheLoader implements LoaderInterface
      */
     public function load(): array
     {
-        if (is_file($this->filename) === true) {
-            return require $this->filename;
+        $filename = $this->getFilename();
+        if (is_file($filename) === true) {
+            return require $filename;
         }
 
         return [];
@@ -44,11 +45,21 @@ class CacheLoader implements LoaderInterface
      */
     public function save(array $config): CacheLoader
     {
-        file_put_contents($this->filename, sprintf(
+        file_put_contents($this->getFilename(), sprintf(
             '<?php return %s;',
             var_export($config, true)
         ));
 
         return $this;
+    }
+
+    /**
+     * Get filename.
+     *
+     * @return string
+     */
+    protected function getFilename(): string
+    {
+        return $this->filename;
     }
 }

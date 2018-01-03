@@ -23,7 +23,7 @@ class StaticFactoryResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->factories) === true;
+        return array_key_exists($key, $this->getFactories()) === true;
     }
 
     /**
@@ -31,7 +31,7 @@ class StaticFactoryResolver implements ResolverInterface
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        $service = $this->factories[$key];
+        $service = $this->getFactories()[$key];
 
         try {
             return $service::factory($key, $serviceLocator, $extra);
@@ -59,6 +59,7 @@ class StaticFactoryResolver implements ResolverInterface
      * @param string $key
      * @param string $factory
      * @return StaticFactoryResolver
+     * @throws InvalidStaticFactory
      */
     public function addStaticFactory(string $key, string $factory): StaticFactoryResolver
     {
@@ -69,5 +70,15 @@ class StaticFactoryResolver implements ResolverInterface
         $this->factories[$key] = $factory;
 
         return $this;
+    }
+
+    /**
+     * Get factories.
+     *
+     * @return StaticFactoryInterface[]
+     */
+    protected function getFactories(): array
+    {
+        return $this->factories;
     }
 }

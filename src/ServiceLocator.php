@@ -95,7 +95,7 @@ class ServiceLocator implements ServiceLocatorInterface
      */
     protected function getResolver(string $key): ?ResolverInterface
     {
-        foreach ($this->resolvers as $resolver) {
+        foreach ($this->getResolvers() as $resolver) {
             if ($resolver->hasService($key) === true) {
                 return $resolver;
             }
@@ -114,10 +114,31 @@ class ServiceLocator implements ServiceLocatorInterface
      */
     protected function getSharedService(string $key): ?object
     {
-        if (array_key_exists($key, $this->shared) === true) {
-            return $this->shared[$key];
+        $shared = $this->getShared();
+        if (array_key_exists($key, $shared) === true) {
+            return $shared[$key];
         }
 
         return null;
+    }
+
+    /**
+     * Get resolvers.
+     *
+     * @return ResolverInterface[]
+     */
+    protected function getResolvers(): array
+    {
+        return $this->resolvers;
+    }
+
+    /**
+     * Get shared.
+     *
+     * @return array
+     */
+    protected function getShared(): array
+    {
+        return $this->shared;
     }
 }

@@ -23,7 +23,7 @@ class FactoryResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->factories) === true;
+        return array_key_exists($key, $this->getFactories()) === true;
     }
 
     /**
@@ -33,7 +33,7 @@ class FactoryResolver implements ResolverInterface
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        $factory = $this->factories[$key];
+        $factory = $this->getFactories()[$key];
         if (is_string($factory) === true) {
             $factory = new $factory();
             $this->factories[$key] = $factory;
@@ -78,5 +78,15 @@ class FactoryResolver implements ResolverInterface
         $this->factories[$key] = $factory;
 
         return $this;
+    }
+
+    /**
+     * Get factories.
+     *
+     * @return ServiceFactoryInterface[]
+     */
+    protected function getFactories(): array
+    {
+        return $this->factories;
     }
 }

@@ -19,6 +19,7 @@ class FactoryResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getFactories()
      */
     public function testRegister(): void
     {
@@ -45,6 +46,7 @@ class FactoryResolverTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getFactories()
      */
     public function testHasService(): void
     {
@@ -76,6 +78,7 @@ class FactoryResolverTest extends TestCase
      *
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
+     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getFactories()
      * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed::__construct()
      * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed
      * @expectedExceptionMessage Failed to create service for key "foo". See previous exception for more details.

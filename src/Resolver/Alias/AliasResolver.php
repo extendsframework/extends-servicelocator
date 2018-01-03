@@ -20,7 +20,7 @@ class AliasResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->aliases) === true;
+        return array_key_exists($key, $this->getAliases()) === true;
     }
 
     /**
@@ -31,7 +31,7 @@ class AliasResolver implements ResolverInterface
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        return $serviceLocator->getService($this->aliases[$key], $extra);
+        return $serviceLocator->getService($this->getAliases()[$key], $extra);
     }
 
     /**
@@ -59,5 +59,15 @@ class AliasResolver implements ResolverInterface
         $this->aliases[$key] = $alias;
 
         return $this;
+    }
+
+    /**
+     * Get aliases.
+     *
+     * @return array
+     */
+    protected function getAliases(): array
+    {
+        return $this->aliases;
     }
 }
