@@ -20,7 +20,7 @@ class AliasResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->getAliases()) === true;
+        return array_key_exists($key, $this->getAliases());
     }
 
     /**

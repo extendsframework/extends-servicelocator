@@ -23,7 +23,7 @@ class StaticFactoryResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->getFactories()) === true;
+        return array_key_exists($key, $this->getFactories());
     }
 
     /**
@@ -63,7 +63,7 @@ class StaticFactoryResolver implements ResolverInterface
      */
     public function addStaticFactory(string $key, string $factory): StaticFactoryResolver
     {
-        if (is_subclass_of($factory, StaticFactoryInterface::class, true) === false) {
+        if (!is_subclass_of($factory, StaticFactoryInterface::class, true)) {
             throw new InvalidStaticFactory($factory);
         }
 

@@ -21,7 +21,7 @@ class InvokableResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->getInvokables()) === true;
+        return array_key_exists($key, $this->getInvokables());
     }
 
     /**
@@ -36,6 +36,7 @@ class InvokableResolver implements ResolverInterface
 
     /**
      * @inheritDoc
+     * @throws InvokableResolverException
      */
     public static function factory(array $services): ResolverInterface
     {
@@ -59,7 +60,7 @@ class InvokableResolver implements ResolverInterface
      */
     public function addInvokable($key, $invokable): InvokableResolver
     {
-        if (class_exists($invokable) === false) {
+        if (!class_exists($invokable)) {
             throw new NonExistingClass($invokable);
         }
 

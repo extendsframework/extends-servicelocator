@@ -30,11 +30,11 @@ class ServiceLocatorFactory implements ServiceLocatorFactoryInterface
      * An exception will be thrown when a resolver for $name can not be found.
      *
      * @param ResolverInterface|string $fqcn
-     * @param iterable                 $services
+     * @param array                    $services
      * @return ResolverInterface
      * @throws UnknownResolverType
      */
-    protected function getResolver(string $fqcn, iterable $services): ResolverInterface
+    protected function getResolver(string $fqcn, array $services): ResolverInterface
     {
         if (is_subclass_of($fqcn, ResolverInterface::class, true) === false) {
             throw new UnknownResolverType($fqcn);

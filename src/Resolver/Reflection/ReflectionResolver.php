@@ -8,6 +8,7 @@ use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 
 class ReflectionResolver implements ResolverInterface
@@ -24,11 +25,12 @@ class ReflectionResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->getClasses()) === true;
+        return array_key_exists($key, $this->getClasses());
     }
 
     /**
      * @inheritDoc
+     * @throws ReflectionException
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
@@ -77,16 +79,17 @@ class ReflectionResolver implements ResolverInterface
      * @return iterable
      * @throws ReflectionResolverException
      * @throws ServiceLocatorException
+     * @throws ReflectionException
      */
     protected function values(string $class, ServiceLocatorInterface $serviceLocator): iterable
     {
         $constructor = (new ReflectionClass($class))->getConstructor();
 
         $values = [];
-        if (($constructor instanceof ReflectionMethod) === true) {
+        if ($constructor instanceof ReflectionMethod) {
             foreach ($constructor->getParameters() as $parameter) {
                 $reflection = $parameter->getClass();
-                if (($reflection instanceof ReflectionClass) === false) {
+                if (!$reflection instanceof ReflectionClass) {
                     throw new InvalidParameter($parameter);
                 }
 

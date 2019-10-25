@@ -45,12 +45,12 @@ class ServiceLocator implements ServiceLocatorInterface
     public function getService(string $key, array $extra = null): object
     {
         $service = $this->getSharedService($key);
-        if ($service === null) {
+        if (!$service) {
             $resolver = $this->getResolver($key);
             if ($resolver instanceof ResolverInterface) {
                 $service = $resolver->getService($key, $this, $extra);
 
-                if ($extra === null) {
+                if (!$extra) {
                     $this->shared[$key] = $service;
                 }
             } else {
@@ -91,12 +91,12 @@ class ServiceLocator implements ServiceLocatorInterface
      * All resolvers will be checked if it can resolve service for $key. First resolver which can will be returned.
      *
      * @param string $key
-     * @return null|ResolverInterface
+     * @return ResolverInterface|null
      */
     protected function getResolver(string $key): ?ResolverInterface
     {
         foreach ($this->getResolvers() as $resolver) {
-            if ($resolver->hasService($key) === true) {
+            if ($resolver->hasService($key)) {
                 return $resolver;
             }
         }
@@ -115,7 +115,7 @@ class ServiceLocator implements ServiceLocatorInterface
     protected function getSharedService(string $key): ?object
     {
         $shared = $this->getShared();
-        if (array_key_exists($key, $shared) === true) {
+        if (array_key_exists($key, $shared)) {
             return $shared[$key];
         }
 

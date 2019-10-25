@@ -21,7 +21,7 @@ class ClosureResolver implements ResolverInterface
      */
     public function hasService(string $key): bool
     {
-        return array_key_exists($key, $this->getClosures()) === true;
+        return array_key_exists($key, $this->getClosures());
     }
 
     /**
