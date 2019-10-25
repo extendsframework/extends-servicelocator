@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
+use ExtendsFramework\ServiceLocator\Exception\ServiceNotFound;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -163,18 +164,19 @@ class ServiceLocatorTest extends TestCase
      *
      * Test that a service can not be located and an exception will be thrown.
      *
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getShared()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocator::getResolvers()
-     * @covers                   \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound
-     * @expectedExceptionMessage No service found for key "foo".
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getShared()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolvers()
+     * @covers \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound::__construct()
      */
     public function testServiceNotFound(): void
     {
+        $this->expectException(ServiceNotFound::class);
+        $this->expectExceptionMessage('No service found for key "foo".');
+
         $serviceLocator = new ServiceLocator([]);
         $serviceLocator->getService('foo');
     }

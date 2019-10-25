@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Alias;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -69,6 +68,6 @@ class AliasResolverTest extends TestCase
             'A' => 'B',
         ]);
 
-        $this->assertInstanceOf(ResolverInterface::class, $resolver);
+        $this->assertIsObject($resolver);
     }
 }

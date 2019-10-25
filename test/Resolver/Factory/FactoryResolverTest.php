@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Factory;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
+use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType;
+use ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use stdClass;
 
 class FactoryResolverTest extends TestCase
@@ -60,13 +60,14 @@ class FactoryResolverTest extends TestCase
      *
      * Test that a invalid factory fqcn can not be registered.
      *
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType
-     * @expectedExceptionMessage Factory must be a subclass of ServiceFactoryInterface, got "bar".
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType::__construct()
      */
     public function testRegisterInvalidFqcn(): void
     {
+        $this->expectException(InvalidFactoryType::class);
+        $this->expectExceptionMessage('Factory must be a subclass of ServiceFactoryInterface, got "bar".');
+
         $resolver = new FactoryResolver();
         $resolver->addFactory('foo', 'bar');
     }
@@ -76,15 +77,18 @@ class FactoryResolverTest extends TestCase
      *
      * Test that exception from factory can be caught.
      *
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getFactories()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed
-     * @expectedExceptionMessage Failed to create service for key "foo". See previous exception for more details.
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getFactories()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\ServiceCreateFailed::__construct()
      */
     public function testServiceException(): void
     {
+        $this->expectException(ServiceCreateFailed::class);
+        $this->expectExceptionMessage(
+            'Failed to create service for key "foo". See previous exception for more details.'
+        );
+
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
         /**
@@ -109,35 +113,6 @@ class FactoryResolverTest extends TestCase
             'A' => FactoryStub::class,
         ]);
 
-        $this->assertInstanceOf(ResolverInterface::class, $resolver);
-    }
-}
-
-class FactoryStub implements ServiceFactoryInterface
-{
-    /**
-     * @inheritDoc
-     */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        $service = new stdClass();
-        $service->key = $key;
-        $service->serviceLocator = $serviceLocator;
-        $service->extra = $extra;
-
-        return $service;
-    }
-}
-
-class FailedFactory implements ServiceFactoryInterface
-{
-    /**
-     * @inheritDoc
-     */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        throw new class extends RuntimeException implements ServiceFactoryException
-        {
-        };
+        $this->assertIsObject($resolver);
     }
 }

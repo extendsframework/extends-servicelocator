@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator;
 
+use ExtendsFramework\ServiceLocator\Exception\UnknownResolverType;
 use ExtendsFramework\ServiceLocator\Resolver\Alias\AliasResolver;
 use ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver;
 use ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver;
-use ExtendsFramework\ServiceLocator\Resolver\Factory\ServiceFactoryInterface;
 use ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver;
 use ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ class ServiceLocatorFactoryTest extends TestCase
                     'foo' => 'bar',
                 ],
                 ClosureResolver::class => [
-                    'foo' => function () {
+                    'foo' => static function () {
                     },
                 ],
                 FactoryResolver::class => [
@@ -46,7 +46,7 @@ class ServiceLocatorFactoryTest extends TestCase
             ],
         ]);
 
-        $this->assertInstanceOf(ServiceLocatorInterface::class, $serviceLocator);
+        $this->assertIsObject($serviceLocator);
     }
 
     /**
@@ -54,29 +54,20 @@ class ServiceLocatorFactoryTest extends TestCase
      *
      * Test that a unknown resolver can not be found.
      *
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::create()
-     * @covers                   \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::getResolver()
-     * @covers                   \ExtendsFramework\ServiceLocator\Exception\UnknownResolverType::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Exception\UnknownResolverType
-     * @expectedExceptionMessage Resolver must be instance or subclass of ResolverInterface, got "A".
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::create()
+     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::getResolver()
+     * @covers \ExtendsFramework\ServiceLocator\Exception\UnknownResolverType::__construct()
      */
     public function testUnknownResolver(): void
     {
+        $this->expectException(UnknownResolverType::class);
+        $this->expectExceptionMessage('Resolver must be instance or subclass of ResolverInterface, got "A".');
+
         $factory = new ServiceLocatorFactory();
         $factory->create([
             ServiceLocatorInterface::class => [
                 'A' => [],
             ],
         ]);
-    }
-}
-
-class FactoryStub implements ServiceFactoryInterface
-{
-    /**
-     * @inheritDoc
-     */
-    public function createService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
     }
 }

@@ -71,37 +71,13 @@ class CacheLoaderTest extends TestCase
     }
 }
 
-class Buffer
-{
-    protected static $filename;
-
-    protected static $data;
-
-    public static function getFilename(): ?string
-    {
-        return static::$filename;
-    }
-
-    public static function getData(): ?string
-    {
-        return static::$data;
-    }
-
-    public static function set(string $filename, string $data): void
-    {
-        static::$filename = $filename;
-        static::$data = $data;
-    }
-
-    public static function reset(): void
-    {
-        static::$filename = null;
-        static::$data = null;
-    }
-}
-
+/**
+ * Override native PHP function.
+ *
+ * @param $filename
+ * @param $data
+ */
 function file_put_contents($filename, $data): void
 {
     Buffer::set($filename, $data);
 }
-

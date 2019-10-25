@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Closure;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -29,14 +28,17 @@ class ClosureResolverTest extends TestCase
          */
         $resolver = new ClosureResolver();
         $service = $resolver
-            ->addClosure('foo', function (string $key, ServiceLocatorInterface $serviceLocator, array $extra = null) {
-                $service = new stdClass();
-                $service->key = $key;
-                $service->serviceLocator = $serviceLocator;
-                $service->extra = $extra;
+            ->addClosure(
+                'foo',
+                static function (string $key, ServiceLocatorInterface $serviceLocator, array $extra = null) {
+                    $service = new stdClass();
+                    $service->key = $key;
+                    $service->serviceLocator = $serviceLocator;
+                    $service->extra = $extra;
 
-                return $service;
-            })
+                    return $service;
+                }
+            )
             ->getService('foo', $serviceLocator, ['foo' => 'bar']);
 
         $this->assertInstanceOf(stdClass::class, $service);
@@ -71,10 +73,10 @@ class ClosureResolverTest extends TestCase
     public function testCreate(): void
     {
         $resolver = ClosureResolver::factory([
-            'A' => function () {
+            'A' => static function () {
             },
         ]);
 
-        $this->assertInstanceOf(ResolverInterface::class, $resolver);
+        $this->assertIsObject($resolver);
     }
 }

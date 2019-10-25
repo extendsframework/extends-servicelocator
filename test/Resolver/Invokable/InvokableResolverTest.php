@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Invokable;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
+use ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -28,10 +28,10 @@ class InvokableResolverTest extends TestCase
          */
         $resolver = new InvokableResolver();
         $service = $resolver
-            ->addInvokable('foo', InvokableSub::class)
+            ->addInvokable('foo', InvokableStub::class)
             ->getService('foo', $serviceLocator, ['foo' => 'bar']);
 
-        $this->assertInstanceOf(InvokableSub::class, $service);
+        $this->assertInstanceOf(InvokableStub::class, $service);
     }
 
     /**
@@ -55,13 +55,14 @@ class InvokableResolverTest extends TestCase
      *
      * Test that a non existing class can no be registered.
      *
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::addInvokable()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass
-     * @expectedExceptionMessage Invokable "bar" must be a existing class.
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::addInvokable()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass::__construct()
      */
     public function testNonExistingClass(): void
     {
+        $this->expectException(NonExistingClass::class);
+        $this->expectExceptionMessage('Invokable "bar" must be a existing class.');
+
         /**
          * @var ServiceLocatorInterface $serviceLocator
          */
@@ -79,23 +80,9 @@ class InvokableResolverTest extends TestCase
     public function testCreate(): void
     {
         $resolver = InvokableResolver::factory([
-            'A' => InvokableSub::class,
+            'A' => InvokableStub::class,
         ]);
 
-        $this->assertInstanceOf(ResolverInterface::class, $resolver);
-    }
-}
-
-class InvokableSub
-{
-    /**
-     * InvokableSub constructor.
-     *
-     * @param string                  $key
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param array|null              $extra
-     */
-    public function __construct(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null)
-    {
+        $this->assertIsObject($resolver);
     }
 }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
+use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -57,17 +57,18 @@ class ReflectionResolverTest extends TestCase
     }
 
     /**
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::addReflection()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getClasses()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::values()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter
-     * @expectedExceptionMessage Reflection parameter "name" must be a class, got type "string".
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::addReflection()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getClasses()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::values()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter::__construct()
      */
     public function testCanNotCreateClassWithNonObjectParameter(): void
     {
+        $this->expectException(InvalidParameter::class);
+        $this->expectExceptionMessage('Reflection parameter "name" must be a class, got type "string".');
+
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
         /**
@@ -92,24 +93,6 @@ class ReflectionResolverTest extends TestCase
             'A' => ClassA::class,
         ]);
 
-        $this->assertInstanceOf(ResolverInterface::class, $resolver);
-    }
-}
-
-class ClassA
-{
-    public function __construct(ClassB $b, ServiceLocatorInterface $serviceLocator)
-    {
-    }
-}
-
-class ClassB
-{
-}
-
-class ClassC
-{
-    public function __construct(string $name)
-    {
+        $this->assertIsObject($resolver);
     }
 }

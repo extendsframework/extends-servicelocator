@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace ExtendsFramework\ServiceLocator\Resolver\StaticFactory;
 
-use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
+use ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\InvalidStaticFactory;
+use ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\ServiceCreateFailed;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use stdClass;
 
 class StaticFactoryResolverTest extends TestCase
@@ -74,7 +74,7 @@ class StaticFactoryResolverTest extends TestCase
             StaticFactoryStub::class => StaticFactoryStub::class,
         ]);
 
-        $this->assertInstanceOf(ResolverInterface::class, $resolver);
+        $this->assertIsObject($resolver);
     }
 
     /**
@@ -82,13 +82,14 @@ class StaticFactoryResolverTest extends TestCase
      *
      * Test that adding a service without StaticFactoryInterface will throw an exception.
      *
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::addStaticFactory()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\InvalidStaticFactory::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\InvalidStaticFactory
-     * @expectedExceptionMessage Factory must be a subclass of StaticFactoryInterface, got "stdClass".
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::addStaticFactory()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\InvalidStaticFactory::__construct()
      */
-    public function testInvalidStaticFactory()
+    public function testInvalidStaticFactory(): void
     {
+        $this->expectException(InvalidStaticFactory::class);
+        $this->expectExceptionMessage('Factory must be a subclass of StaticFactoryInterface, got "stdClass".');
+
         $resolver = new StaticFactoryResolver();
         $resolver->addStaticFactory(stdClass::class, stdClass::class);
     }
@@ -98,15 +99,16 @@ class StaticFactoryResolverTest extends TestCase
      *
      * Test that exception thrown by service is caught and rethrow as wrapped exception.
      *
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::addStaticFactory()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::getService()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::hasService()
-     * @covers                   \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\ServiceCreateFailed::__construct()
-     * @expectedException        \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\ServiceCreateFailed
-     * @expectedExceptionMessage Failed to create service for key "A". See previous exception for more details.
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::addStaticFactory()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::getService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::hasService()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\ServiceCreateFailed::__construct()
      */
-    public function testServiceCreateFailed()
+    public function testServiceCreateFailed(): void
     {
+        $this->expectException(ServiceCreateFailed::class);
+        $this->expectExceptionMessage('Failed to create service for key "A". See previous exception for more details.');
+
         $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
 
         /**
@@ -116,34 +118,5 @@ class StaticFactoryResolverTest extends TestCase
         $resolver
             ->addStaticFactory('A', StaticFailedFactoryStub::class)
             ->getService('A', $serviceLocator, []);
-    }
-}
-
-class StaticFactoryStub implements StaticFactoryInterface
-{
-    /**
-     * @inheritDoc
-     */
-    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        $service = new stdClass();
-        $service->key = $key;
-        $service->serviceLocator = $serviceLocator;
-        $service->extra = $extra;
-
-        return $service;
-    }
-}
-
-class StaticFailedFactoryStub implements StaticFactoryInterface
-{
-    /**
-     * @inheritDoc
-     */
-    public static function factory(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        throw new class extends RuntimeException implements StaticFactoryResolverException
-        {
-        };
     }
 }
