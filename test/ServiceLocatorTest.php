@@ -18,10 +18,6 @@ class ServiceLocatorTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getShared()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolvers()
      */
     public function testRegister(): void
     {
@@ -57,10 +53,6 @@ class ServiceLocatorTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getShared()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolvers()
      */
     public function testSharedService(): void
     {
@@ -100,10 +92,6 @@ class ServiceLocatorTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::addResolver()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getShared()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolvers()
      */
     public function testManagedService(): void
     {
@@ -166,10 +154,6 @@ class ServiceLocatorTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::__construct()
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getSharedService()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getShared()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolver()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocator::getResolvers()
      * @covers \ExtendsFramework\ServiceLocator\Exception\ServiceNotFound::__construct()
      */
     public function testServiceNotFound(): void

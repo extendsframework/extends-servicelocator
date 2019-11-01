@@ -17,8 +17,6 @@ class ReflectionResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::addReflection()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getClasses()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::values()
      */
     public function testRegister(): void
     {
@@ -47,7 +45,6 @@ class ReflectionResolverTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getClasses()
      */
     public function testHasService(): void
     {
@@ -60,8 +57,6 @@ class ReflectionResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::addReflection()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::getClasses()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\ReflectionResolver::values()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter::__construct()
      */
     public function testCanNotCreateClassWithNonObjectParameter(): void

@@ -20,7 +20,6 @@ class ServiceLocatorFactoryTest extends TestCase
      * Test that a ServiceLocatorInterface will be created from a config.
      *
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::create()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::getResolver()
      */
     public function testCreate(): void
     {
@@ -55,7 +54,6 @@ class ServiceLocatorFactoryTest extends TestCase
      * Test that a unknown resolver can not be found.
      *
      * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::create()
-     * @covers \ExtendsFramework\ServiceLocator\ServiceLocatorFactory::getResolver()
      * @covers \ExtendsFramework\ServiceLocator\Exception\UnknownResolverType::__construct()
      */
     public function testUnknownResolver(): void

@@ -12,7 +12,7 @@ class FileLoader implements LoaderInterface
      *
      * @var string[]
      */
-    protected $paths = [];
+    private $paths = [];
 
     /**
      * GlobLoader constructor.
@@ -32,7 +32,7 @@ class FileLoader implements LoaderInterface
     public function load(): array
     {
         $loaded = [];
-        foreach ($this->getPaths() as $path) {
+        foreach ($this->paths as $path) {
             foreach (glob($path, GLOB_BRACE) as $file) {
                 /** @noinspection PhpIncludeInspection */
                 $loaded[] = require $file;
@@ -53,15 +53,5 @@ class FileLoader implements LoaderInterface
         $this->paths[] = $path;
 
         return $this;
-    }
-
-    /**
-     * Get paths.
-     *
-     * @return string[]
-     */
-    protected function getPaths(): array
-    {
-        return $this->paths;
     }
 }

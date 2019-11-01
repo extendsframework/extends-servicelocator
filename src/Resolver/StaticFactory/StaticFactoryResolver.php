@@ -16,29 +16,7 @@ class StaticFactoryResolver implements ResolverInterface
      *
      * @var StaticFactoryInterface[]
      */
-    protected $factories = [];
-
-    /**
-     * @inheritDoc
-     */
-    public function hasService(string $key): bool
-    {
-        return array_key_exists($key, $this->getFactories());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        $service = $this->getFactories()[$key];
-
-        try {
-            return $service::factory($key, $serviceLocator, $extra);
-        } catch (Throwable $exception) {
-            throw new ServiceCreateFailed($key, $exception);
-        }
-    }
+    private $factories = [];
 
     /**
      * @inheritDoc
@@ -51,6 +29,28 @@ class StaticFactoryResolver implements ResolverInterface
         }
 
         return $resolver;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasService(string $key): bool
+    {
+        return isset($this->factories[$key]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
+    {
+        $service = $this->factories[$key];
+
+        try {
+            return $service::factory($key, $serviceLocator, $extra);
+        } catch (Throwable $exception) {
+            throw new ServiceCreateFailed($key, $exception);
+        }
     }
 
     /**
@@ -70,15 +70,5 @@ class StaticFactoryResolver implements ResolverInterface
         $this->factories[$key] = $factory;
 
         return $this;
-    }
-
-    /**
-     * Get factories.
-     *
-     * @return StaticFactoryInterface[]
-     */
-    protected function getFactories(): array
-    {
-        return $this->factories;
     }
 }

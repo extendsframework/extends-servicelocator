@@ -17,7 +17,6 @@ class ClosureResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::addClosure()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::getClosures()
      */
     public function testRegister(): void
     {
@@ -54,7 +53,6 @@ class ClosureResolverTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Closure\ClosureResolver::getClosures()
      */
     public function testHasService(): void
     {

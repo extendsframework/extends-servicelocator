@@ -14,25 +14,7 @@ class ClosureResolver implements ResolverInterface
      *
      * @var array
      */
-    protected $closures = [];
-
-    /**
-     * @inheritDoc
-     */
-    public function hasService(string $key): bool
-    {
-        return array_key_exists($key, $this->getClosures());
-    }
-
-    /**
-     * The closure will be called with the parameters $key and $serviceLocator in specified order.
-     *
-     * @inheritDoc
-     */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        return $this->getClosures()[$key]($key, $serviceLocator, $extra);
-    }
+    private $closures = [];
 
     /**
      * @inheritDoc
@@ -48,6 +30,24 @@ class ClosureResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function hasService(string $key): bool
+    {
+        return isset($this->closures[$key]);
+    }
+
+    /**
+     * The closure will be called with the parameters $key and $serviceLocator in specified order.
+     *
+     * @inheritDoc
+     */
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
+    {
+        return $this->closures[$key]($key, $serviceLocator, $extra);
+    }
+
+    /**
      * Register $closure for $key.
      *
      * @param string  $key
@@ -59,15 +59,5 @@ class ClosureResolver implements ResolverInterface
         $this->closures[$key] = $closure;
 
         return $this;
-    }
-
-    /**
-     * Get closures.
-     *
-     * @return array
-     */
-    protected function getClosures(): array
-    {
-        return $this->closures;
     }
 }

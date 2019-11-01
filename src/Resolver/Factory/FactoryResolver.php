@@ -16,35 +16,7 @@ class FactoryResolver implements ResolverInterface
      *
      * @var ServiceFactoryInterface[]
      */
-    protected $factories = [];
-
-    /**
-     * @inheritDoc
-     */
-    public function hasService(string $key): bool
-    {
-        return array_key_exists($key, $this->getFactories());
-    }
-
-    /**
-     * When the factory is a string, a new instance will be created and replaces the string.
-     *
-     * @inheritDoc
-     */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        $factory = $this->getFactories()[$key];
-        if (is_string($factory)) {
-            $factory = new $factory();
-            $this->factories[$key] = $factory;
-        }
-
-        try {
-            return $factory->createService($key, $serviceLocator, $extra);
-        } catch (Throwable $exception) {
-            throw new ServiceCreateFailed($key, $exception);
-        }
-    }
+    private $factories = [];
 
     /**
      * @inheritDoc
@@ -58,6 +30,34 @@ class FactoryResolver implements ResolverInterface
         }
 
         return $resolver;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasService(string $key): bool
+    {
+        return isset($this->factories[$key]);
+    }
+
+    /**
+     * When the factory is a string, a new instance will be created and replaces the string.
+     *
+     * @inheritDoc
+     */
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
+    {
+        $factory = $this->factories[$key];
+        if (is_string($factory)) {
+            $factory = new $factory();
+            $this->factories[$key] = $factory;
+        }
+
+        try {
+            return $factory->createService($key, $serviceLocator, $extra);
+        } catch (Throwable $exception) {
+            throw new ServiceCreateFailed($key, $exception);
+        }
     }
 
     /**
@@ -79,15 +79,5 @@ class FactoryResolver implements ResolverInterface
         $this->factories[$key] = $factory;
 
         return $this;
-    }
-
-    /**
-     * Get factories.
-     *
-     * @return ServiceFactoryInterface[]
-     */
-    protected function getFactories(): array
-    {
-        return $this->factories;
     }
 }

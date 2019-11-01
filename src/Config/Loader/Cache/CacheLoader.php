@@ -12,7 +12,7 @@ class CacheLoader implements LoaderInterface
      *
      * @var string
      */
-    protected $filename;
+    private $filename;
 
     /**
      * CacheLoader constructor.
@@ -59,7 +59,7 @@ class CacheLoader implements LoaderInterface
      *
      * @return string
      */
-    protected function getFilename(): string
+    private function getFilename(): string
     {
         return $this->filename;
     }

@@ -13,21 +13,21 @@ class ServiceLocator implements ServiceLocatorInterface
      *
      * @var ResolverInterface[]
      */
-    protected $resolvers = [];
+    private $resolvers = [];
 
     /**
      * An associative array with all the shared services.
      *
      * @var array
      */
-    protected $shared = [];
+    private $shared = [];
 
     /**
      * Service locator config.
      *
      * @var array
      */
-    protected $config;
+    private $config;
 
     /**
      * ServiceLocator constructor.
@@ -44,21 +44,26 @@ class ServiceLocator implements ServiceLocatorInterface
      */
     public function getService(string $key, array $extra = null): object
     {
-        $service = $this->getSharedService($key);
-        if (!$service) {
-            $resolver = $this->getResolver($key);
-            if ($resolver instanceof ResolverInterface) {
-                $service = $resolver->getService($key, $this, $extra);
+        if (!isset($this->shared[$key])) {
+            $service = null;
+            foreach ($this->resolvers as $resolver) {
+                if ($resolver->hasService($key)) {
+                    $service = $resolver->getService($key, $this, $extra);
 
-                if (!$extra) {
-                    $this->shared[$key] = $service;
+                    if (!$extra) {
+                        $this->shared[$key] = $service;
+                    }
+
+                    break 1;
                 }
-            } else {
+            }
+
+            if (!$service) {
                 throw new ServiceNotFound($key);
             }
         }
 
-        return $service;
+        return $service ?? $this->shared[$key];
     }
 
     /**
@@ -83,62 +88,5 @@ class ServiceLocator implements ServiceLocatorInterface
         $this->resolvers[$key] = $resolver;
 
         return $this;
-    }
-
-    /**
-     * Get resolver for $key.
-     *
-     * All resolvers will be checked if it can resolve service for $key. First resolver which can will be returned.
-     *
-     * @param string $key
-     * @return ResolverInterface|null
-     */
-    protected function getResolver(string $key): ?ResolverInterface
-    {
-        foreach ($this->getResolvers() as $resolver) {
-            if ($resolver->hasService($key)) {
-                return $resolver;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get shared service for $key.
-     *
-     * If no service is shared, null will be returned.
-     *
-     * @param string $key
-     * @return null|object
-     */
-    protected function getSharedService(string $key): ?object
-    {
-        $shared = $this->getShared();
-        if (array_key_exists($key, $shared)) {
-            return $shared[$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * Get resolvers.
-     *
-     * @return ResolverInterface[]
-     */
-    protected function getResolvers(): array
-    {
-        return $this->resolvers;
-    }
-
-    /**
-     * Get shared.
-     *
-     * @return array
-     */
-    protected function getShared(): array
-    {
-        return $this->shared;
     }
 }

@@ -13,26 +13,7 @@ class AliasResolver implements ResolverInterface
      *
      * @var array
      */
-    protected $aliases = [];
-
-    /**
-     * @inheritDoc
-     */
-    public function hasService(string $key): bool
-    {
-        return array_key_exists($key, $this->getAliases());
-    }
-
-    /**
-     * If resolver has an alias for $key, the alias will be used to get the service from the service locator. A
-     * infinite loop between aliases and services will not be detected.
-     *
-     * @inheritDoc
-     */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        return $serviceLocator->getService($this->getAliases()[$key], $extra);
-    }
+    private $aliases = [];
 
     /**
      * @inheritDoc
@@ -48,6 +29,25 @@ class AliasResolver implements ResolverInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function hasService(string $key): bool
+    {
+        return isset($this->aliases[$key]);
+    }
+
+    /**
+     * If resolver has an alias for $key, the alias will be used to get the service from the service locator. A
+     * infinite loop between aliases and services will not be detected.
+     *
+     * @inheritDoc
+     */
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
+    {
+        return $serviceLocator->getService($this->aliases[$key], $extra);
+    }
+
+    /**
      * Register $alias for $key.
      *
      * @param string $key
@@ -59,15 +59,5 @@ class AliasResolver implements ResolverInterface
         $this->aliases[$key] = $alias;
 
         return $this;
-    }
-
-    /**
-     * Get aliases.
-     *
-     * @return array
-     */
-    protected function getAliases(): array
-    {
-        return $this->aliases;
     }
 }

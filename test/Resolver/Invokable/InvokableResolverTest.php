@@ -17,7 +17,6 @@ class InvokableResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::addInvokable()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getInvokables()
      */
     public function testRegister(): void
     {
@@ -41,7 +40,6 @@ class InvokableResolverTest extends TestCase
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getInvokables()
      */
     public function testHasService(): void
     {

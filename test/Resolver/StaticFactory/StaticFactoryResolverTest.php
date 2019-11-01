@@ -19,7 +19,6 @@ class StaticFactoryResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::addStaticFactory()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::hasService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::getFactories()
      */
     public function testGetService(): void
     {
@@ -49,7 +48,6 @@ class StaticFactoryResolverTest extends TestCase
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::addStaticFactory()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::hasService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::getService()
-     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::getFactories()
      */
     public function testHasService(): void
     {

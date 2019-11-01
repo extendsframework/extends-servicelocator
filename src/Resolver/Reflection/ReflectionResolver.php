@@ -5,7 +5,6 @@ namespace ExtendsFramework\ServiceLocator\Resolver\Reflection;
 
 use ExtendsFramework\ServiceLocator\Resolver\Reflection\Exception\InvalidParameter;
 use ExtendsFramework\ServiceLocator\Resolver\ResolverInterface;
-use ExtendsFramework\ServiceLocator\ServiceLocatorException;
 use ExtendsFramework\ServiceLocator\ServiceLocatorInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -18,27 +17,7 @@ class ReflectionResolver implements ResolverInterface
      *
      * @var array
      */
-    protected $classes = [];
-
-    /**
-     * @inheritDoc
-     */
-    public function hasService(string $key): bool
-    {
-        return array_key_exists($key, $this->getClasses());
-    }
-
-    /**
-     * @inheritDoc
-     * @throws ReflectionException
-     */
-    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
-    {
-        $class = $this->getClasses()[$key];
-        $values = $this->values($class, $serviceLocator);
-
-        return new $class(...$values);
-    }
+    private $classes = [];
 
     /**
      * @inheritDoc
@@ -54,35 +33,20 @@ class ReflectionResolver implements ResolverInterface
     }
 
     /**
-     * Register $class for $key.
-     *
-     * @param string $key
-     * @param string $class
-     * @return ReflectionResolver
+     * @inheritDoc
      */
-    public function addReflection(string $key, string $class): ReflectionResolver
+    public function hasService(string $key): bool
     {
-        $this->classes[$key] = $class;
-
-        return $this;
+        return isset($this->classes[$key]);
     }
 
     /**
-     * Get construct parameters for $class.
-     *
-     * Parameters will be obtained by reflection. A parameter must be a class which can be resolved by the service
-     * locator. When the parameter is not a class, or can not be resolved by the service locator, an exception will
-     * be thrown.
-     *
-     * @param string                  $class
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return iterable
-     * @throws ReflectionResolverException
-     * @throws ServiceLocatorException
+     * @inheritDoc
      * @throws ReflectionException
      */
-    protected function values(string $class, ServiceLocatorInterface $serviceLocator): iterable
+    public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
+        $class = $this->classes[$key];
         $constructor = (new ReflectionClass($class))->getConstructor();
 
         $values = [];
@@ -102,16 +66,20 @@ class ReflectionResolver implements ResolverInterface
             }
         }
 
-        return $values;
+        return new $class(...$values);
     }
 
     /**
-     * Get classes.
+     * Register $class for $key.
      *
-     * @return array
+     * @param string $key
+     * @param string $class
+     * @return ReflectionResolver
      */
-    protected function getClasses(): array
+    public function addReflection(string $key, string $class): ReflectionResolver
     {
-        return $this->classes;
+        $this->classes[$key] = $class;
+
+        return $this;
     }
 }
