@@ -45,7 +45,7 @@ class InvokableResolver implements ResolverInterface
     {
         $invokable = $this->invokables[$key];
 
-        return new $invokable($key, $serviceLocator, $extra);
+        return new $invokable();
     }
 
     /**
