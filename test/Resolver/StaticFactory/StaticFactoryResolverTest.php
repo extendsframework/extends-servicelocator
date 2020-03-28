@@ -81,6 +81,7 @@ class StaticFactoryResolverTest extends TestCase
      * Test that adding a service without StaticFactoryInterface will throw an exception.
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::addStaticFactory()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\StaticFactoryResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\StaticFactory\Exception\InvalidStaticFactory::__construct()
      */
     public function testInvalidStaticFactory(): void
@@ -88,8 +89,15 @@ class StaticFactoryResolverTest extends TestCase
         $this->expectException(InvalidStaticFactory::class);
         $this->expectExceptionMessage('Factory must be a subclass of StaticFactoryInterface, got "stdClass".');
 
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+
+        /**
+         * @var ServiceLocatorInterface $serviceLocator
+         */
         $resolver = new StaticFactoryResolver();
-        $resolver->addStaticFactory(stdClass::class, stdClass::class);
+        $resolver
+            ->addStaticFactory(stdClass::class, stdClass::class)
+            ->getService(stdClass::class, $serviceLocator);
     }
 
     /**

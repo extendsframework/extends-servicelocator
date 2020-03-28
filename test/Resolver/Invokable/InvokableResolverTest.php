@@ -54,6 +54,7 @@ class InvokableResolverTest extends TestCase
      * Test that a non existing class can no be registered.
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::addInvokable()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\InvokableResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Invokable\Exception\NonExistingClass::__construct()
      */
     public function testNonExistingClass(): void
@@ -61,11 +62,15 @@ class InvokableResolverTest extends TestCase
         $this->expectException(NonExistingClass::class);
         $this->expectExceptionMessage('Invokable "bar" must be a existing class.');
 
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+
         /**
          * @var ServiceLocatorInterface $serviceLocator
          */
         $resolver = new InvokableResolver();
-        $resolver->addInvokable('foo', 'bar');
+        $resolver
+            ->addInvokable('foo', 'bar')
+            ->getService('foo', $serviceLocator);
     }
 
     /**

@@ -44,10 +44,13 @@ class StaticFactoryResolver implements ResolverInterface
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
-        $service = $this->factories[$key];
+        $factory = $this->factories[$key];
+        if (!is_subclass_of($factory, StaticFactoryInterface::class, true)) {
+            throw new InvalidStaticFactory($factory);
+        }
 
         try {
-            return $service::factory($key, $serviceLocator, $extra);
+            return $factory::factory($key, $serviceLocator, $extra);
         } catch (Throwable $exception) {
             throw new ServiceCreateFailed($key, $exception);
         }
@@ -59,14 +62,9 @@ class StaticFactoryResolver implements ResolverInterface
      * @param string $key
      * @param string $factory
      * @return StaticFactoryResolver
-     * @throws InvalidStaticFactory
      */
     public function addStaticFactory(string $key, string $factory): StaticFactoryResolver
     {
-        if (!is_subclass_of($factory, StaticFactoryInterface::class, true)) {
-            throw new InvalidStaticFactory($factory);
-        }
-
         $this->factories[$key] = $factory;
 
         return $this;

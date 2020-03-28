@@ -18,7 +18,6 @@ class InvokableResolver implements ResolverInterface
 
     /**
      * @inheritDoc
-     * @throws InvokableResolverException
      */
     public static function factory(array $services): ResolverInterface
     {
@@ -39,11 +38,16 @@ class InvokableResolver implements ResolverInterface
     }
 
     /**
+     * An exception will be thrown when $invokable is not a existing class.
+     *
      * @inheritDoc
      */
     public function getService(string $key, ServiceLocatorInterface $serviceLocator, array $extra = null): object
     {
         $invokable = $this->invokables[$key];
+        if (!class_exists($invokable)) {
+            throw new NonExistingClass($invokable);
+        }
 
         return new $invokable($key, $serviceLocator, $extra);
     }
@@ -51,19 +55,13 @@ class InvokableResolver implements ResolverInterface
     /**
      * Register $invokable for $key.
      *
-     * An exception will be thrown when $invokable is not a existing class.
-     *
      * @param string $key
      * @param string $invokable
+     *
      * @return InvokableResolver
-     * @throws InvokableResolverException
      */
     public function addInvokable($key, $invokable): InvokableResolver
     {
-        if (!class_exists($invokable)) {
-            throw new NonExistingClass($invokable);
-        }
-
         $this->invokables[$key] = (string)$invokable;
 
         return $this;

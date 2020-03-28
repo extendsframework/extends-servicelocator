@@ -59,6 +59,7 @@ class FactoryResolverTest extends TestCase
      * Test that a invalid factory fqcn can not be registered.
      *
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::addFactory()
+     * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\FactoryResolver::getService()
      * @covers \ExtendsFramework\ServiceLocator\Resolver\Factory\Exception\InvalidFactoryType::__construct()
      */
     public function testRegisterInvalidFqcn(): void
@@ -66,8 +67,15 @@ class FactoryResolverTest extends TestCase
         $this->expectException(InvalidFactoryType::class);
         $this->expectExceptionMessage('Factory must be a subclass of ServiceFactoryInterface, got "bar".');
 
+        $serviceLocator = $this->createMock(ServiceLocatorInterface::class);
+
+        /**
+         * @var ServiceLocatorInterface $serviceLocator
+         */
         $resolver = new FactoryResolver();
-        $resolver->addFactory('foo', 'bar');
+        $resolver
+            ->addFactory('foo', 'bar')
+            ->getService('foo', $serviceLocator);
     }
 
     /**
