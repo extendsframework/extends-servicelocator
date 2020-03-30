@@ -49,7 +49,7 @@ class InvokableResolver implements ResolverInterface
             throw new NonExistingClass($invokable);
         }
 
-        return new $invokable($key, $serviceLocator, $extra);
+        return new $invokable();
     }
 
     /**
